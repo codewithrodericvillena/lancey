@@ -1,6 +1,6 @@
 # Lancy — User Guide
 
-> **Prefer video?** Watch the [Official 3-Minute Video Walkthrough on YouTube](https://www.youtube.com/watch?v=wxfsJB4re-M) covering installation, key features, and client workflows.
+> **Prefer video?** Watch the [90-second video tour on YouTube](https://www.youtube.com/watch?v=_MsPRVRGk6I) covering the dashboard, commissions, clients, invoices, exports and updates.
 
 ## Getting Started
 

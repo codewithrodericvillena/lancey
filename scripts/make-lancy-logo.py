@@ -17,7 +17,7 @@ except ImportError:
 
 ROOT = Path(__file__).resolve().parent.parent
 ASSETS = ROOT / "src" / "Lancy.Avalonia" / "Assets"
-S = 2048  # draw big, downscale for clean edges
+S = 4096  # master resolution; everything else is downscaled from it for clean edges
 C1, C2, DOT = (99, 102, 241), (139, 92, 246), (34, 211, 238)  # indigo -> violet, cyan dot
 
 
@@ -38,17 +38,12 @@ def mark(size=S, with_tile=True):
     img = Image.new("RGBA", (size, size), (0, 0, 0, 0))
     if with_tile:
         # indigo -> violet diagonal, with a cooler glow bottom-right
-        grad = Image.new("RGBA", (size, size))
-        px = grad.load()
+        import numpy as np
         stops = [(0.0, (79, 70, 229)), (0.55, (124, 92, 246)), (1.0, (168, 85, 247))]
-        for y in range(size):
-            for x in range(size):
-                t = (x + y) / (2 * size)
-                for (t0, c0), (t1, c1) in zip(stops, stops[1:]):
-                    if t <= t1:
-                        k = (t - t0) / (t1 - t0)
-                        px[x, y] = tuple(int(c0[i] + (c1[i] - c0[i]) * k) for i in range(3)) + (255,)
-                        break
+        t = (np.arange(size)[:, None] + np.arange(size)[None, :]) / (2 * size - 2)
+        ts = [p for p, _ in stops]
+        rgb = np.stack([np.interp(t, ts, [c[i] for _, c in stops]) for i in range(3)], axis=-1)
+        grad = Image.fromarray(np.dstack([rgb, np.full((size, size), 255)]).astype("uint8"), "RGBA")
         mask = Image.new("L", (size, size), 0)
         ImageDraw.Draw(mask).rounded_rectangle((0, 0, size - 1, size - 1), radius=int(size * 0.225), fill=255)
         # soft top-left sheen
@@ -73,15 +68,13 @@ def mark(size=S, with_tile=True):
     img = Image.alpha_composite(img, letter)
     # blade tint: white -> cyan toward the point, only beyond the stem
     u = size / 100
-    tint = Image.new("RGBA", (size, size), (0, 0, 0, 0))
-    tp = tint.load()
+    import numpy as np
     x_start, x_end = 43 * u, 89 * u
-    for x in range(int(x_start), min(size, int(x_end) + 1)):
-        k = (x - x_start) / (x_end - x_start)
-        col = tuple(int(255 + (DOT[i] - 255) * k) for i in range(3)) + (255,)
-        for y in range(int(55 * u), int(80 * u)):
-            tp[x, y] = col
-    tint.putalpha(Image.composite(lmask, Image.new("L", (size, size), 0), tint.getchannel("A")))
+    k = np.clip((np.arange(size) - x_start) / (x_end - x_start), 0, 1)[None, :, None]
+    col = np.array([255, 255, 255]) + (np.array(DOT) - np.array([255, 255, 255])) * k
+    tint_rgb = np.broadcast_to(col, (size, size, 3))
+    tint = Image.fromarray(np.dstack([tint_rgb, np.full((size, size), 255)]).astype("uint8"), "RGBA")
+    tint.putalpha(lmask)
     img = Image.alpha_composite(img, tint)
     return img
 
@@ -92,8 +85,11 @@ def save_png(img, path, px):
 
 def main():
     full = mark()
-    save_png(full, ROOT / "docs" / "logo.png", 512)
-    save_png(full, ASSETS / "app-icon-source.png", 1024)
+    save_png(full, ROOT / "docs" / "logo.png", 1024)
+    brand = ROOT / "docs" / "brand"
+    brand.mkdir(exist_ok=True)
+    full.save(brand / "lancy-logo-4096.png", optimize=True)  # master
+    save_png(full, ASSETS / "app-icon-source.png", 2048)
     for name, px in (("app-512.png", 512), ("app-256.png", 256), ("app-icon-64.png", 64)):
         save_png(full, ASSETS / name, px)
     sizes = [(16, 16), (24, 24), (32, 32), (48, 48), (64, 64), (128, 128), (256, 256)]
@@ -102,16 +98,16 @@ def main():
     full.resize((1024, 1024), Image.LANCZOS).save(ASSETS / "app.icns")
 
     # wordmark (transparent, white text for the dark onboarding window)
-    h = 245
-    word = Image.new("RGBA", (1315, h), (0, 0, 0, 0))
-    word.paste(mark(h), (0, 0))
+    h = 490  # 2x the old size; the app shows it at a fixed 280px width, so this just renders sharper
+    word = Image.new("RGBA", (2630, h), (0, 0, 0, 0))
+    word.paste(full.resize((h, h), Image.LANCZOS), (0, 0))
     bold = None
     for c in ("C:/Windows/Fonts/segoeuib.ttf", "C:/Windows/Fonts/arialbd.ttf",
               "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf"):
         if Path(c).exists():
-            bold = ImageFont.truetype(c, 190)
+            bold = ImageFont.truetype(c, 380)
             break
-    ImageDraw.Draw(word).text((h + 40, h // 2), "Lancy", font=bold or ImageFont.load_default(),
+    ImageDraw.Draw(word).text((h + 80, h // 2), "Lancy", font=bold or ImageFont.load_default(),
                               fill=(241, 242, 246, 255), anchor="lm")
     word.save(ASSETS / "logo-wordmark.png")
 
@@ -133,7 +129,7 @@ def main():
   </g>
 </svg>
 '''
-    for p in (ROOT / "docs" / "logo.svg", ROOT / "site" / "assets" / "img" / "logo.svg"):
+    for p in (ROOT / "docs" / "logo.svg", ROOT / "docs" / "brand" / "lancy-logo.svg", ROOT / "site" / "assets" / "img" / "logo.svg"):
         p.write_text(svg, encoding="utf-8")
     print("logo + icons written")
 

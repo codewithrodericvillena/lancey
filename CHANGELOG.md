@@ -3,6 +3,16 @@
 All notable changes to Lancy (formerly FCMS Pro) are documented here. Format loosely follows
 [Keep a Changelog](https://keepachangelog.com/).
 
+## [2.1.1]
+
+### Fixed
+- Purple buttons (for example Export Backup and Invoice PDF) could show without their label on displays scaled above 100%. The glow behind them that caused it was removed.
+- The update prompt now opens on top of other windows, so it can no longer be missed behind the app you are using.
+
+### Changed
+- Sharper logo and icons, drawn from a 4096px master (app icon source 2048px, wordmark at 2x).
+- New 90-second product tour video on the website.
+
 ## [2.1.0]
 
 ### Added

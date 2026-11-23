@@ -272,9 +272,6 @@
     <Style Selector="Button:focus-visible">
       <Setter Property="BorderBrush" Value="{DynamicResource AppAccentBrush}" />
     </Style>
-    <Style Selector="Button.accent /template/ ContentPresenter">
-      <Setter Property="BoxShadow" Value="0 2 8 0 #336366F1" />
-    </Style>
 
     <!--
       Shared column-header label for every list page's table (Commissions,

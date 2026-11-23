@@ -129,9 +129,9 @@ public class UpdateService
 /// <summary>Routes NetSparkle's own diagnostics into Lancy's log so "no update appeared" reports can be diagnosed.</summary>
 internal sealed class SerilogSparkleLogger : NetSparkleUpdater.Interfaces.ILogger
 {
-    public void PrintMessage(string message, params object[] arguments)
+    public void PrintMessage(string message, params object[]? arguments)
     {
-        try { Log.Information("Sparkle: " + string.Format(message, arguments)); }
+        try { Log.Information("Sparkle: " + string.Format(message, arguments ?? Array.Empty<object>())); }
         catch (FormatException) { Log.Information("Sparkle: {Message}", message); }
     }
 }

@@ -31,6 +31,10 @@ public static class ScreenshotGenerator
     // LANCY_SCREENSHOT_SIZE=WxH renders at another size (e.g. 760x520 to check small-window layouts);
     // LANCY_SCREENSHOT_DIR keeps those out of the website's screenshot folder.
     private static readonly (int W, int H) Size = ParseSize(Environment.GetEnvironmentVariable("LANCY_SCREENSHOT_SIZE"));
+    // LANCY_SCREENSHOT_SCALE=1.5 renders the same layout with more pixels (crisp 1080p from a 1280x720 layout).
+    private static readonly double Scale =
+        double.TryParse(Environment.GetEnvironmentVariable("LANCY_SCREENSHOT_SCALE"),
+            System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out var sc) && sc >= 1 ? sc : 1;
     private static int TargetWidth => Size.W;
     private static int TargetHeight => Size.H;
 
@@ -83,9 +87,9 @@ public static class ScreenshotGenerator
 
             var actualWidth = (int)Math.Round(window.ClientSize.Width);
             var actualHeight = (int)Math.Round(window.ClientSize.Height);
-            var pixelSize = new PixelSize(actualWidth, actualHeight);
+            var pixelSize = new PixelSize((int)Math.Round(actualWidth * Scale), (int)Math.Round(actualHeight * Scale));
 
-            using var rtb = new RenderTargetBitmap(pixelSize, new Vector(96, 96));
+            using var rtb = new RenderTargetBitmap(pixelSize, new Vector(96 * Scale, 96 * Scale));
             rtb.Render(window);
 
             var filePath = Path.Combine(outDir, filename);
@@ -121,6 +125,27 @@ public static class ScreenshotGenerator
         // 4. Analytics
         mainVm.Navigation.NavigateTo(AppPage.Analytics);
         await CaptureViewAsync("analytics.png", 1000);
+
+        // 4b. Commission detail (has the Invoice PDF button), Backup page (CSV export), and a real invoice PDF
+        await using (var scope = services.CreateAsyncScope())
+        {
+            var db = scope.ServiceProvider.GetRequiredService<LancyDbContext>();
+            var brand = await db.Commissions.FirstOrDefaultAsync(c => c.Title == "Brand Identity Package");
+            if (brand != null)
+            {
+                mainVm.Navigation.NavigateTo(AppPage.CommissionDetail, brand.Id);
+                await CaptureViewAsync("commission-detail.png", 900);
+
+                var client = await db.Clients.FirstOrDefaultAsync(c => c.Id == brand.ClientId);
+                var payments = await db.Payments.Where(p => p.CommissionId == brand.Id).ToListAsync();
+                var settings = await db.AppSettings.FirstAsync();
+                var invoice = await scope.ServiceProvider.GetRequiredService<IInvoiceRenderer>()
+                    .RenderPdfAsync(brand, client, payments, settings);
+                await File.WriteAllBytesAsync(Path.Combine(outDir, "invoice.pdf"), invoice);
+            }
+        }
+        mainVm.Navigation.NavigateTo(AppPage.Backup);
+        await CaptureViewAsync("backup.png", 700);
 
         // 5. Global Search overlay on Dashboard
         mainVm.Navigation.NavigateTo(AppPage.Dashboard);
