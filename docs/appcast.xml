@@ -3,25 +3,49 @@
   <channel>
     <title>Lancy Updates</title>
     <item>
-      <title>v2.0.1 (macos)</title>
-      <pubDate>Mon, 23 Nov 2026 09:51:43 -0000</pubDate>
-      <description>### Changed
-- Maintenance release that verifies Lancy's in-app update pipeline end to end (signed release feed, update prompt, silent install). No functional changes from 2.0.0.</description>
-      <enclosure url="https://github.com/codewithrodericvillena/lancey/releases/download/v2.0.1/Lancy-2.0.1-arm64.dmg" sparkle:version="2.0.1" sparkle:os="macos" length="46827157" type="application/octet-stream" sparkle:edSignature="GdgXzHozXVm3Eg5MJlshEQN/O6nM6/i0G659whWprVesecdGB0pJBrKIncCd+2/kAivkm4ZaxuxMhtVLeR4lCw==" />
+      <title>v2.1.0 (macos)</title>
+      <pubDate>Mon, 23 Nov 2026 10:59:18 -0000</pubDate>
+      <description>### Added
+- New Lancy logo: an "L" whose foot is a lance blade, with refreshed app icons, installer icons and website branding.
+
+### Changed
+- Better small-window layout: pages no longer waste 48px on each side, so there is more room on narrow or split-screen windows.
+- Client and commission detail pages now wrap their totals and action buttons instead of running off the edge.
+
+### Fixed
+- **Automatic updates now work.** The update feed is now signed (the app rejected unsigned feeds, so no update was ever offered), and the downloaded installer keeps its `.exe` name so the silent install actually runs. Versions 2.0.0 and 2.0.1 cannot update themselves: install 2.1.0 manually once from the download page, and later updates are automatic.
+- The updater now writes its progress to the app log, which makes "no update appeared" reports diagnosable.</description>
+      <enclosure url="https://github.com/codewithrodericvillena/lancey/releases/download/v2.1.0/Lancy-2.1.0-arm64.dmg" sparkle:version="2.1.0" sparkle:os="macos" length="47463436" type="application/octet-stream" sparkle:edSignature="l2F0X3898SmgLovVVQTmkihi2XcHltRXr4v3f20RQU8A0o8aIt7P/NXGdc4nPZc9ZCqFgzw8i7ZwyMFNaBkjBw==" />
     </item>
     <item>
-      <title>v2.0.1 (windows)</title>
-      <pubDate>Mon, 23 Nov 2026 09:51:43 -0000</pubDate>
-      <description>### Changed
-- Maintenance release that verifies Lancy's in-app update pipeline end to end (signed release feed, update prompt, silent install). No functional changes from 2.0.0.</description>
-      <enclosure url="https://github.com/codewithrodericvillena/lancey/releases/download/v2.0.1/Lancy-Setup-2.0.1.exe" sparkle:version="2.0.1" sparkle:os="windows" length="36656310" type="application/octet-stream" sparkle:edSignature="yiwpa6DMv083Ajdh2K5yJFBtoYxilxFpNA9U4YFtlrbrWgNX+0nXrlgeKD0BoU4iIxn3K9uuxiv8IZIhAdZgAQ==" />
+      <title>v2.1.0 (windows)</title>
+      <pubDate>Mon, 23 Nov 2026 10:59:18 -0000</pubDate>
+      <description>### Added
+- New Lancy logo: an "L" whose foot is a lance blade, with refreshed app icons, installer icons and website branding.
+
+### Changed
+- Better small-window layout: pages no longer waste 48px on each side, so there is more room on narrow or split-screen windows.
+- Client and commission detail pages now wrap their totals and action buttons instead of running off the edge.
+
+### Fixed
+- **Automatic updates now work.** The update feed is now signed (the app rejected unsigned feeds, so no update was ever offered), and the downloaded installer keeps its `.exe` name so the silent install actually runs. Versions 2.0.0 and 2.0.1 cannot update themselves: install 2.1.0 manually once from the download page, and later updates are automatic.
+- The updater now writes its progress to the app log, which makes "no update appeared" reports diagnosable.</description>
+      <enclosure url="https://github.com/codewithrodericvillena/lancey/releases/download/v2.1.0/Lancy-Setup-2.1.0.exe" sparkle:version="2.1.0" sparkle:os="windows" length="36918840" type="application/octet-stream" sparkle:edSignature="ayVsCPBoHE2/D9NbZEQ5p59oOtse5zBKxyCfbbI2Neno5kCO0y0tSLsvujibW1BkZIeQFlOfzaMfkOt38KSiCA==" />
     </item>
     <item>
-      <title>v2.0.1 (linux)</title>
-      <pubDate>Mon, 23 Nov 2026 09:51:43 -0000</pubDate>
-      <description>### Changed
-- Maintenance release that verifies Lancy's in-app update pipeline end to end (signed release feed, update prompt, silent install). No functional changes from 2.0.0.</description>
-      <enclosure url="https://github.com/codewithrodericvillena/lancey/releases/download/v2.0.1/lancy_2.0.1_amd64.deb" sparkle:version="2.0.1" sparkle:os="linux" length="36459292" type="application/octet-stream" sparkle:edSignature="d6BiyfSpPwvkRJdfB8CzH2D8YzhJNhtPg+SbsdB9yjuLyJwmItAn07QXgUHX0/GKC63F5BaFYiZlVKEcvCCpDA==" />
+      <title>v2.1.0 (linux)</title>
+      <pubDate>Mon, 23 Nov 2026 10:59:18 -0000</pubDate>
+      <description>### Added
+- New Lancy logo: an "L" whose foot is a lance blade, with refreshed app icons, installer icons and website branding.
+
+### Changed
+- Better small-window layout: pages no longer waste 48px on each side, so there is more room on narrow or split-screen windows.
+- Client and commission detail pages now wrap their totals and action buttons instead of running off the edge.
+
+### Fixed
+- **Automatic updates now work.** The update feed is now signed (the app rejected unsigned feeds, so no update was ever offered), and the downloaded installer keeps its `.exe` name so the silent install actually runs. Versions 2.0.0 and 2.0.1 cannot update themselves: install 2.1.0 manually once from the download page, and later updates are automatic.
+- The updater now writes its progress to the app log, which makes "no update appeared" reports diagnosable.</description>
+      <enclosure url="https://github.com/codewithrodericvillena/lancey/releases/download/v2.1.0/lancy_2.1.0_amd64.deb" sparkle:version="2.1.0" sparkle:os="linux" length="36696052" type="application/octet-stream" sparkle:edSignature="Doz9uMOoz2r/p7gp8Mi7aNwoZx+PHT1NjnyKxzSQt+4ziM4uiKqVBZfG2+0x0eegVxFeTT+/PEM/6968a2wiCg==" />
     </item>
   </channel>
 </rss>
