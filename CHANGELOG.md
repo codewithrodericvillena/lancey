@@ -3,6 +3,11 @@
 All notable changes to Lancy (formerly FCMS Pro) are documented here. Format loosely follows
 [Keep a Changelog](https://keepachangelog.com/).
 
+## [2.0.1]
+
+### Changed
+- Maintenance release that verifies Lancy's in-app update pipeline end to end (signed release feed, update prompt, silent install). No functional changes from 2.0.0.
+
 ## [2.0.0]
 
 FCMS Pro is now **Lancy**. Same local-first app, new name, new look, and new tools for getting paid.

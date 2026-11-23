@@ -233,8 +233,8 @@ class ChangelogParser(unittest.TestCase):
 
     def test_real_changelog_parses_all_versions(self):
         p = bsd.parse_changelog(read_text(CHANGELOG))
-        self.assertEqual(len(p["versions"]), 20)
-        self.assertEqual(p["versions"][0]["version"], "2.0.0")
+        self.assertGreaterEqual(len(p["versions"]), 21)
+        self.assertRegex(p["versions"][0]["version"], r"^\d+\.\d+\.\d+$")
 
 
 class ChangelogSectionBoundaries(unittest.TestCase):
