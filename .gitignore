@@ -34,6 +34,8 @@ installers/linux/appimagetool-*.AppImage
 Thumbs.db
 publish/
 *.pdf
+# Windows matches *.pdf case-insensitively against the src/Lancy.Pdf project folder
+!src/Lancy.Pdf/
 *.db
 *.db-shm
 *.db-wal
