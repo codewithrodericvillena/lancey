@@ -134,6 +134,20 @@ def main():
     ET.parse("docs/appcast.xml")  # sanity check: must be well-formed
     print("docs/appcast.xml written")
 
+    # The app runs NetSparkle in Strict mode, which also requires a signature of the appcast
+    # itself at <appcast url>.signature (base64 Ed25519 over the exact file bytes). Without it
+    # the updater rejects the whole feed ("Appcast is not valid") and never offers an update.
+    sig_path = "docs/appcast.xml.signature"
+    if signer is not None:
+        import base64
+        with open("docs/appcast.xml", "rb") as f:
+            sig = base64.b64encode(signer.sign(f.read())).decode("ascii")
+        with open(sig_path, "w", encoding="ascii", newline="") as f:
+            f.write(sig)
+        print(f"{sig_path} written")
+    elif os.path.exists(sig_path):
+        os.remove(sig_path)  # never leave a stale signature next to an unsigned feed
+
 
 if __name__ == "__main__":
     main()

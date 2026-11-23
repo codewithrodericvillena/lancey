@@ -40,11 +40,14 @@ public class UpdateService
             {
                 // A real icon instead of null, so the update window can be built safely.
                 UIFactory = new UIFactory(LoadWindowIcon()!),
+                LogWriter = new SerilogSparkleLogger(),
                 RelaunchAfterUpdate = true,
                 CustomInstallerArguments = OperatingSystem.IsWindows()
                     ? "/VERYSILENT /SUPPRESSMSGBOXES /NORESTART /SP-"
                     : "",
             };
+
+            _sparkle.UpdateCheckFinished += (_, status) => Log.Information("Updater: check finished with status {Status}", status);
 
             // Exit immediately so the installer can overwrite the running executable.
             _sparkle.CloseApplication += () => Environment.Exit(0);
@@ -106,5 +109,15 @@ public class UpdateService
             Log.Warning(ex, "Updater: could not load window icon");
             return null;
         }
+    }
+}
+
+/// <summary>Routes NetSparkle's own diagnostics into Lancy's log so "no update appeared" reports can be diagnosed.</summary>
+internal sealed class SerilogSparkleLogger : NetSparkleUpdater.Interfaces.ILogger
+{
+    public void PrintMessage(string message, params object[] arguments)
+    {
+        try { Log.Information("Sparkle: " + string.Format(message, arguments)); }
+        catch (FormatException) { Log.Information("Sparkle: {Message}", message); }
     }
 }

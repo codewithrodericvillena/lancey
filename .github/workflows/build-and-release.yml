@@ -214,8 +214,8 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          if git diff --quiet -- docs/appcast.xml; then echo "appcast unchanged"; exit 0; fi
-          git add docs/appcast.xml
+          if git diff --quiet -- docs/appcast.xml docs/appcast.xml.signature && [ -z "$(git ls-files --others --exclude-standard docs/appcast.xml.signature)" ]; then echo "appcast unchanged"; exit 0; fi
+          git add docs/appcast.xml docs/appcast.xml.signature
           git commit -m "chore: update appcast.xml for ${GITHUB_REF_NAME} [skip ci]"
           for i in 1 2 3; do
             git pull --rebase origin main && git push origin HEAD:main && exit 0
