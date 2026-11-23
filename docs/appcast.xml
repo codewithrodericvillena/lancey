@@ -3,67 +3,25 @@
   <channel>
     <title>Lancy Updates</title>
     <item>
-      <title>v2.0.0 (macos)</title>
-      <pubDate>Mon, 23 Nov 2026 09:44:34 -0000</pubDate>
-      <description>FCMS Pro is now **Lancy**. Same local-first app, new name, new look, and new tools for getting paid.
-
-### Added
-- **Invoice PDF**: export a client-ready invoice from any commission page, with your business details, the job, payments received and the balance due.
-- **CSV export**: save clients, commissions, payments and expenses as spreadsheet files from the Backup page.
-- Sidebar version badge with a one-click "Check for updates".
-- Your existing FCMS Pro data (database, attachments, backups) is copied into Lancy automatically on first launch. The old install is left untouched.
-
-### Changed
-- New brand: Lancy logo, app icons, installers and website.
-- Redesigned sidebar with grouped sections and a clearer active-page indicator; softer corners and spacing across the app.
-- Updates now come from the new Lancy release feed and are signed with a new key. Install this version manually once; later updates are automatic.
-
-### Fixed
-- The active sidebar item was unreadable in the Light theme.
-- Saving a backup now offers a JSON file type instead of PDF.</description>
-      <enclosure url="https://github.com/codewithrodericvillena/lancey/releases/download/v2.0.0/Lancy-2.0.0-arm64.dmg" sparkle:version="2.0.0" sparkle:os="macos" length="46827064" type="application/octet-stream" sparkle:edSignature="G9/7DQjGIzmnXHTJ4O74Ax/QP9UPCWLwxM9Zw5C0aEVfABIFLwraA6l2dcC3DYZYX24VnTCM7VBaZiLJGv2dBA==" />
+      <title>v2.0.1 (macos)</title>
+      <pubDate>Mon, 23 Nov 2026 09:51:43 -0000</pubDate>
+      <description>### Changed
+- Maintenance release that verifies Lancy's in-app update pipeline end to end (signed release feed, update prompt, silent install). No functional changes from 2.0.0.</description>
+      <enclosure url="https://github.com/codewithrodericvillena/lancey/releases/download/v2.0.1/Lancy-2.0.1-arm64.dmg" sparkle:version="2.0.1" sparkle:os="macos" length="46827157" type="application/octet-stream" sparkle:edSignature="GdgXzHozXVm3Eg5MJlshEQN/O6nM6/i0G659whWprVesecdGB0pJBrKIncCd+2/kAivkm4ZaxuxMhtVLeR4lCw==" />
     </item>
     <item>
-      <title>v2.0.0 (windows)</title>
-      <pubDate>Mon, 23 Nov 2026 09:44:34 -0000</pubDate>
-      <description>FCMS Pro is now **Lancy**. Same local-first app, new name, new look, and new tools for getting paid.
-
-### Added
-- **Invoice PDF**: export a client-ready invoice from any commission page, with your business details, the job, payments received and the balance due.
-- **CSV export**: save clients, commissions, payments and expenses as spreadsheet files from the Backup page.
-- Sidebar version badge with a one-click "Check for updates".
-- Your existing FCMS Pro data (database, attachments, backups) is copied into Lancy automatically on first launch. The old install is left untouched.
-
-### Changed
-- New brand: Lancy logo, app icons, installers and website.
-- Redesigned sidebar with grouped sections and a clearer active-page indicator; softer corners and spacing across the app.
-- Updates now come from the new Lancy release feed and are signed with a new key. Install this version manually once; later updates are automatic.
-
-### Fixed
-- The active sidebar item was unreadable in the Light theme.
-- Saving a backup now offers a JSON file type instead of PDF.</description>
-      <enclosure url="https://github.com/codewithrodericvillena/lancey/releases/download/v2.0.0/Lancy-Setup-2.0.0.exe" sparkle:version="2.0.0" sparkle:os="windows" length="36650440" type="application/octet-stream" sparkle:edSignature="2U5ToqFdz5KXS21EX2yR76i+dCL2zttfJs4GfLlZoGh9dfLRqu2L9fCHMoREfKWcTwO3RyxDWPV2VA+V+53AAg==" />
+      <title>v2.0.1 (windows)</title>
+      <pubDate>Mon, 23 Nov 2026 09:51:43 -0000</pubDate>
+      <description>### Changed
+- Maintenance release that verifies Lancy's in-app update pipeline end to end (signed release feed, update prompt, silent install). No functional changes from 2.0.0.</description>
+      <enclosure url="https://github.com/codewithrodericvillena/lancey/releases/download/v2.0.1/Lancy-Setup-2.0.1.exe" sparkle:version="2.0.1" sparkle:os="windows" length="36656310" type="application/octet-stream" sparkle:edSignature="yiwpa6DMv083Ajdh2K5yJFBtoYxilxFpNA9U4YFtlrbrWgNX+0nXrlgeKD0BoU4iIxn3K9uuxiv8IZIhAdZgAQ==" />
     </item>
     <item>
-      <title>v2.0.0 (linux)</title>
-      <pubDate>Mon, 23 Nov 2026 09:44:34 -0000</pubDate>
-      <description>FCMS Pro is now **Lancy**. Same local-first app, new name, new look, and new tools for getting paid.
-
-### Added
-- **Invoice PDF**: export a client-ready invoice from any commission page, with your business details, the job, payments received and the balance due.
-- **CSV export**: save clients, commissions, payments and expenses as spreadsheet files from the Backup page.
-- Sidebar version badge with a one-click "Check for updates".
-- Your existing FCMS Pro data (database, attachments, backups) is copied into Lancy automatically on first launch. The old install is left untouched.
-
-### Changed
-- New brand: Lancy logo, app icons, installers and website.
-- Redesigned sidebar with grouped sections and a clearer active-page indicator; softer corners and spacing across the app.
-- Updates now come from the new Lancy release feed and are signed with a new key. Install this version manually once; later updates are automatic.
-
-### Fixed
-- The active sidebar item was unreadable in the Light theme.
-- Saving a backup now offers a JSON file type instead of PDF.</description>
-      <enclosure url="https://github.com/codewithrodericvillena/lancey/releases/download/v2.0.0/lancy_2.0.0_amd64.deb" sparkle:version="2.0.0" sparkle:os="linux" length="36459274" type="application/octet-stream" sparkle:edSignature="f2/5OIV37r0yUuNrgwviRPUwivqUNYiUKwag27PK4yEKetNIwdaO1Ja8yBCyh3Wz/tM5XXMYOZZpo0VTC1OkBA==" />
+      <title>v2.0.1 (linux)</title>
+      <pubDate>Mon, 23 Nov 2026 09:51:43 -0000</pubDate>
+      <description>### Changed
+- Maintenance release that verifies Lancy's in-app update pipeline end to end (signed release feed, update prompt, silent install). No functional changes from 2.0.0.</description>
+      <enclosure url="https://github.com/codewithrodericvillena/lancey/releases/download/v2.0.1/lancy_2.0.1_amd64.deb" sparkle:version="2.0.1" sparkle:os="linux" length="36459292" type="application/octet-stream" sparkle:edSignature="d6BiyfSpPwvkRJdfB8CzH2D8YzhJNhtPg+SbsdB9yjuLyJwmItAn07QXgUHX0/GKC63F5BaFYiZlVKEcvCCpDA==" />
     </item>
   </channel>
 </rss>
