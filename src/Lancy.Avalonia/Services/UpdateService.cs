@@ -41,6 +41,9 @@ public class UpdateService
                 // A real icon instead of null, so the update window can be built safely.
                 UIFactory = new UIFactory(LoadWindowIcon()!),
                 LogWriter = new SerilogSparkleLogger(),
+                // GitHub's release redirect sends no usable file name, so NetSparkle saved the installer as
+                // an extensionless GUID that Windows can't run. Name it from the URL (Lancy-Setup-x.y.z.exe).
+                CheckServerFileName = false,
                 RelaunchAfterUpdate = true,
                 CustomInstallerArguments = OperatingSystem.IsWindows()
                     ? "/VERYSILENT /SUPPRESSMSGBOXES /NORESTART /SP-"
