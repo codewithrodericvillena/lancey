@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# FCMS Pro - Linux AppImage builder
+# Lancy - Linux AppImage builder
 #
 # Prerequisites:
 #   - .NET 8 SDK
@@ -10,10 +10,10 @@
 
 set -euo pipefail
 
-APP_NAME="FcmsPro"
-VERSION="1.6.9"
+APP_NAME="Lancy"
+VERSION="2.0.0"
 RID="linux-x64"
-PROJECT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../../src/FcmsPro.Avalonia" && pwd)"
+PROJECT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../../src/Lancy.Avalonia" && pwd)"
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 BUILD_DIR="${SCRIPT_DIR}/build"
 APPDIR="${BUILD_DIR}/${APP_NAME}.AppDir"
@@ -21,7 +21,7 @@ APPDIR="${BUILD_DIR}/${APP_NAME}.AppDir"
 echo "==> Publishing self-contained ${RID} build..."
 rm -rf "${BUILD_DIR}"
 mkdir -p "${BUILD_DIR}"
-dotnet publish "${PROJECT_DIR}/FcmsPro.Avalonia.csproj" \
+dotnet publish "${PROJECT_DIR}/Lancy.Avalonia.csproj" \
   -c Release -r "${RID}" --self-contained true \
   -p:PublishSingleFile=true \
   -o "${BUILD_DIR}/publish"
@@ -32,11 +32,11 @@ mkdir -p "${APPDIR}/usr/bin" "${APPDIR}/usr/share/applications" "${APPDIR}/usr/s
 cp -R "${BUILD_DIR}/publish/"* "${APPDIR}/usr/bin/"
 chmod +x "${APPDIR}/usr/bin/${APP_NAME}"
 
-cat > "${APPDIR}/usr/share/applications/fcmspro.desktop" << DESKTOP
+cat > "${APPDIR}/usr/share/applications/lancy.desktop" << DESKTOP
 [Desktop Entry]
-Name=FCMS Pro
+Name=Lancy
 Exec=${APP_NAME}
-Icon=fcmspro
+Icon=lancy
 Type=Application
 Categories=Office;Finance;
 DESKTOP
@@ -44,8 +44,8 @@ DESKTOP
 # app-256.png is generated from Assets/app-icon-source.png.
 ICON_SRC="${PROJECT_DIR}/Assets/app-256.png"
 if [ -f "${ICON_SRC}" ]; then
-  cp "${ICON_SRC}" "${APPDIR}/usr/share/icons/hicolor/256x256/apps/fcmspro.png"
-  cp "${ICON_SRC}" "${APPDIR}/fcmspro.png"
+  cp "${ICON_SRC}" "${APPDIR}/usr/share/icons/hicolor/256x256/apps/lancy.png"
+  cp "${ICON_SRC}" "${APPDIR}/lancy.png"
 else
   echo "WARNING: ${ICON_SRC} not found - AppImage will use a generic icon."
 fi
@@ -54,11 +54,11 @@ fi
 cat > "${APPDIR}/AppRun" << 'APPRUN'
 #!/usr/bin/env bash
 HERE="$(dirname "$(readlink -f "${0}")")"
-exec "${HERE}/usr/bin/FcmsPro" "$@"
+exec "${HERE}/usr/bin/Lancy" "$@"
 APPRUN
 chmod +x "${APPDIR}/AppRun"
 
-cp "${APPDIR}/usr/share/applications/fcmspro.desktop" "${APPDIR}/fcmspro.desktop"
+cp "${APPDIR}/usr/share/applications/lancy.desktop" "${APPDIR}/lancy.desktop"
 
 echo "==> Building AppImage..."
 APPIMAGETOOL="appimagetool"
@@ -79,6 +79,6 @@ fi
 # libfuse.so.2" before it ever gets to building anything. This flag makes it
 # extract itself to a temp dir and run from there instead, which needs no
 # special runner configuration.
-"${APPIMAGETOOL}" --appimage-extract-and-run "${APPDIR}" "${BUILD_DIR}/FcmsPro-${VERSION}-x86_64.AppImage"
+"${APPIMAGETOOL}" --appimage-extract-and-run "${APPDIR}" "${BUILD_DIR}/Lancy-${VERSION}-x86_64.AppImage"
 
-echo "==> Done. Output: ${BUILD_DIR}/FcmsPro-${VERSION}-x86_64.AppImage"
+echo "==> Done. Output: ${BUILD_DIR}/Lancy-${VERSION}-x86_64.AppImage"

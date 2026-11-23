@@ -1,0 +1,159 @@
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
+using System.Threading.Tasks;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using Lancy.Core.Entities;
+using Lancy.Core.Interfaces;
+using Lancy.Core.Services;
+using Lancy.Avalonia.Services;
+using Lancy.Avalonia.ViewModels.Shell;
+
+namespace Lancy.Avalonia.ViewModels.Clients;
+
+public partial class ClientsListViewModel : ObservableObject, ICreatablePage
+{
+    private readonly ClientService _clientService;
+    private readonly IUnitOfWork _uow;
+    private readonly DialogService _dialogService;
+    private readonly NavigationService _navigation;
+
+    [ObservableProperty] private string _searchQuery = string.Empty;
+    [ObservableProperty] private bool _isLoading;
+    [ObservableProperty] private Client? _selectedClient;
+    [ObservableProperty] private string? _errorMessage;
+    [ObservableProperty] private ListSortOption _sortOption = ListSortOption.Newest;
+
+    /// <summary>A Client has no amount/deadline of its own, so only the date and name options make sense here.</summary>
+    public IReadOnlyList<ListSortOption> SortOptions { get; } =
+        new[] { ListSortOption.Newest, ListSortOption.Oldest, ListSortOption.NameAZ, ListSortOption.NameZA };
+
+    partial void OnSortOptionChanged(ListSortOption value) => _ = LoadAsync();
+
+    [ObservableProperty] private ObservableCollection<Client> _clients = new();
+
+    /// <summary>True once a load has completed and found nothing - drives the empty-state illustration in ClientsListView.</summary>
+    public bool HasNoResults => !IsLoading && Clients.Count == 0;
+
+    public ClientsListViewModel(ClientService clientService, IUnitOfWork uow, DialogService dialogService, NavigationService navigation)
+    {
+        _clientService = clientService;
+        _uow = uow;
+        _dialogService = dialogService;
+        _navigation = navigation;
+        _ = LoadAsync();
+    }
+
+    partial void OnSearchQueryChanged(string value) => _ = LoadAsync();
+
+    [RelayCommand]
+    private async Task LoadAsync()
+    {
+        IsLoading = true;
+        ErrorMessage = null;
+        try
+        {
+            var results = await _uow.Clients.SearchAsync(SearchQuery);
+            var filtered = results.Where(c => !c.IsDeleted);
+
+            IOrderedEnumerable<Client> ordered = SortOption switch
+            {
+                ListSortOption.Oldest => filtered.OrderBy(c => c.DateAdded),
+                ListSortOption.NameAZ => filtered.OrderBy(c => c.Name, StringComparer.OrdinalIgnoreCase),
+                ListSortOption.NameZA => filtered.OrderByDescending(c => c.Name, StringComparer.OrdinalIgnoreCase),
+                _ => filtered.OrderByDescending(c => c.DateAdded), // Newest (default)
+            };
+
+            var newClients = new ObservableCollection<Client>();
+            foreach (var c in ordered)
+                newClients.Add(c);
+            Clients = newClients;
+        }
+        catch (Exception ex)
+        {
+            ErrorMessage = $"Could not load clients: {ex.Message}";
+        }
+        finally
+        {
+            IsLoading = false;
+            OnPropertyChanged(nameof(HasNoResults));
+        }
+    }
+
+    [RelayCommand]
+    private async Task AddAsync()
+    {
+        var formVm = new ClientFormViewModel(_clientService);
+        var window = new Views.Clients.ClientFormWindow { DataContext = formVm };
+
+        Client? result = null;
+        formVm.Saved += c => { result = c; window.Close(); };
+        formVm.Cancelled += window.Close;
+
+        await _dialogService.ShowAsync<object>(window);
+        if (result is not null)
+            await LoadAsync();
+    }
+
+    [RelayCommand]
+    private async Task EditAsync(Client? client)
+    {
+        client ??= SelectedClient;
+        if (client is null) return;
+
+        var formVm = new ClientFormViewModel(_clientService, client);
+        var window = new Views.Clients.ClientFormWindow { DataContext = formVm };
+
+        Client? result = null;
+        formVm.Saved += c => { result = c; window.Close(); };
+        formVm.Cancelled += window.Close;
+
+        await _dialogService.ShowAsync<object>(window);
+        if (result is not null)
+            await LoadAsync();
+    }
+
+    [RelayCommand]
+    private async Task DeleteAsync(Client? client)
+    {
+        client ??= SelectedClient;
+        if (client is null) return;
+
+        // Matches PWA behavior (Phase 1 audit §4.2): deleting a client does
+        // NOT touch their commissions, which are left with a dangling
+        // ClientId rather than being cascaded or blocked. The confirm copy
+        // below says so explicitly, same as the PWA's dialog text.
+        var confirmed = await _dialogService.ConfirmAsync(
+            "Delete Client?",
+            $"\"{client.Name}\" will be moved to the trash (recoverable for 30 days). Any of their commissions will remain but will no longer show a client.",
+            isDestructive: true,
+            confirmLabel: "Delete");
+
+        if (!confirmed) return;
+
+        IsLoading = true;
+        try
+        {
+            await _clientService.DeleteAsync(client);
+        }
+        finally
+        {
+            // LoadAsync will set IsLoading = false when it finishes
+            await LoadAsync();
+        }
+    }
+
+    [RelayCommand]
+    private void ViewProfile(Client? client)
+    {
+        client ??= SelectedClient;
+        if (client is null) return;
+        _navigation.NavigateTo(AppPage.Clients, client.Id);
+        // NOTE: profile drill-down within the Clients page (vs. a full page
+        // nav) is a reasonable alternative UX - left as a TODO for visual
+        // design pass; the ViewModel-level plumbing (ClientProfileViewModel)
+        // is ready either way.
+    }
+}

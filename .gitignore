@@ -18,8 +18,8 @@ installers/linux/appimagetool-*.AppImage
 .idea/
 *.suo
 
-## Local runtime data (fcms.db, logs, backups) lives entirely outside this
-## repo, in the OS app-data directory (see FcmsDbContextFactory.GetAppDataDirectory) -
+## Local runtime data (lancy.db, logs, backups) lives entirely outside this
+## repo, in the OS app-data directory (see LancyDbContextFactory.GetAppDataDirectory) -
 ## never inside the source tree, so there's nothing here to ignore by path.
 ## A previous **/logs/ and **/backups/ pattern here was removed after it
 ## silently excluded the real ViewModels/Logs, Views/Logs, and Backup source
@@ -56,7 +56,8 @@ tools/
 *.aac
 *.m4a
 *.ogg
-FCMS_Pro_YouTube_Thumbnail*
+Lancy_YouTube_Thumbnail*
+FCMS_Pro_*
 
 ## Secrets, credentials, and certificates
 .env*

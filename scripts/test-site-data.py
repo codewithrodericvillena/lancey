@@ -159,7 +159,7 @@ class EmptyBody(unittest.TestCase):
 class Checksums(unittest.TestCase):
     def test_fallback_to_sha256sums_file(self):
         sums = os.path.join(tempfile.mkdtemp(), "SHA256SUMS.txt")
-        write_text(sums, ("e" * 64) + "  FcmsPro-Setup-1.6.9.exe\n")
+        write_text(sums, ("e" * 64) + "  Lancy-Setup-1.6.9.exe\n")
         # release-empty-body's .exe has a digest, so strip it via a temp copy
         data = read_json(os.path.join(FIX, "release-empty-body.json"))
         for r in data:
@@ -193,7 +193,7 @@ class NoHardcodedNames(unittest.TestCase):
         data = read_json(os.path.join(FIX, "release-1.6.9.json"))
         for r in data:
             for a in r["assets"]:
-                a["name"] = "totally-different-" + a["name"].replace("FcmsPro", "App").replace("fcmspro", "app")
+                a["name"] = "totally-different-" + a["name"].replace("Lancy", "App").replace("lancy", "app")
                 a["browser_download_url"] = "https://example.invalid/" + a["name"]
         tmp = os.path.join(tempfile.mkdtemp(), "renamed.json")
         write_json(tmp, data)
@@ -233,8 +233,8 @@ class ChangelogParser(unittest.TestCase):
 
     def test_real_changelog_parses_all_versions(self):
         p = bsd.parse_changelog(read_text(CHANGELOG))
-        self.assertEqual(len(p["versions"]), 19)
-        self.assertEqual(p["versions"][0]["version"], "1.6.9")
+        self.assertEqual(len(p["versions"]), 20)
+        self.assertEqual(p["versions"][0]["version"], "2.0.0")
 
 
 class ChangelogSectionBoundaries(unittest.TestCase):

@@ -6,7 +6,7 @@
  * crawlers). This module only REFRESHES it, in this order:
  *
  *   1. ./data/release.json   same-origin, fetched with cache: "no-cache"
- *   2. api.github.com        /repos/villenaderic/FcmsPro/releases/latest
+ *   2. api.github.com        /repos/codewithrodericvillena/lancey/releases/latest
  *                            (cached in sessionStorage for 10 minutes)
  *   3. nothing               the pre-rendered values stay, and every download
  *                            button still points at /releases/latest
@@ -14,7 +14,7 @@
  * Rules:
  *   - Never replace newer data with older data (a stale CDN copy of release.json
  *     must not roll the page back).
- *   - Never write a link that is not on github.com/villenaderic/FcmsPro/.
+ *   - Never write a link that is not on github.com/codewithrodericvillena/lancey/.
  *   - No hard-coded versioned filenames anywhere in this file.
  *
  * DOM hooks (all optional; a page uses the ones it has):
@@ -34,16 +34,16 @@
  * Public API (used by main.js and the download page):
  *   initRelease()   -> Promise<{release, source} | null>
  *   whenRelease()   -> same promise, for late subscribers
- * Event: document dispatches "fcms:release" with detail {release, source, updated}.
+ * Event: document dispatches "lancy:release" with detail {release, source, updated}.
  */
 
-const REPO = "villenaderic/FcmsPro";
+const REPO = "codewithrodericvillena/lancey";
 const REPO_URL = `https://github.com/${REPO}`;
 export const LATEST_URL = `${REPO_URL}/releases/latest`;
 const API_URL = `https://api.github.com/repos/${REPO}/releases/latest`;
 const DATA_URL = new URL("../../data/release.json", import.meta.url).href;
 
-const CACHE_KEY = "fcms-release-api";
+const CACHE_KEY = "lancy-release-api";
 const CACHE_MS = 10 * 60 * 1000;
 const FETCH_TIMEOUT_MS = 8000;
 const NEW_DAYS = 14;
@@ -326,7 +326,7 @@ export function initRelease() {
     try {
       updated = applyRelease(result.release);
     } catch (e) { /* a DOM surprise must never break the page */ }
-    document.dispatchEvent(new CustomEvent("fcms:release", { detail: { ...result, updated } }));
+    document.dispatchEvent(new CustomEvent("lancy:release", { detail: { ...result, updated } }));
     return result;
   })();
   return started;

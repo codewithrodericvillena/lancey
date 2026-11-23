@@ -1,0 +1,331 @@
+using System;
+using System.Threading;
+using System.Threading.Tasks;
+using Avalonia;
+using Avalonia.Controls;
+using Avalonia.Controls.ApplicationLifetimes;
+using Avalonia.Markup.Xaml;
+using Lancy.Core.Interfaces;
+using Lancy.Core.Services;
+using Lancy.Core.Metrics;
+using Lancy.Core.Backup;
+using Lancy.Data;
+using Lancy.Pdf;
+using Lancy.Avalonia.Services;
+using Lancy.Avalonia.ViewModels.Shell;
+using Lancy.Avalonia.ViewModels.Onboarding;
+using Lancy.Avalonia.Views.Shell;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.EntityFrameworkCore;
+using Serilog;
+
+namespace Lancy.Avalonia;
+
+public partial class App : Application
+{
+    public static IServiceProvider Services { get; private set; } = null!;
+    private readonly CancellationTokenSource _lifetimeCts = new();
+
+    public override void Initialize()
+    {
+        AvaloniaXamlLoader.Load(this);
+    }
+
+    public override async void OnFrameworkInitializationCompleted()
+    {
+        try
+        {
+            await InitializeAndShowStartupWindowAsync();
+        }
+        catch (Exception ex)
+        {
+            // This is the critical catch-all for this whole method: since it's
+            // `async void`, an uncaught exception here does NOT propagate back
+            // through a normal try/catch in Main() - it can silently exit the
+            // process with no console output at all. Logging explicitly here,
+            // to both Serilog and a guaranteed-plain-text crash file, then
+            // rethrowing so Program.cs's AppDomain.UnhandledException handler
+            // also gets a chance to record it.
+            try { Log.Fatal(ex, "Unhandled exception during app startup"); } catch { /* Serilog may not be configured yet */ }
+            try
+            {
+                var crashLogPath = System.IO.Path.Combine(System.IO.Path.GetTempPath(), "lancy-crash.log");
+                System.IO.File.AppendAllText(crashLogPath, $"[{DateTime.Now:O}] App.OnFrameworkInitializationCompleted:\n{ex}\n\n");
+            }
+            catch { /* nothing further we can do if even this fails */ }
+
+            throw;
+        }
+
+        base.OnFrameworkInitializationCompleted();
+    }
+
+    private async Task InitializeAndShowStartupWindowAsync()
+    {
+        ConfigureDiagnosticLogging();
+
+        var services = new ServiceCollection();
+        ConfigureServices(services);
+        Services = services.BuildServiceProvider();
+
+        SingleInstanceService.StartListening(_lifetimeCts.Token);
+
+        var desktop = ApplicationLifetime as IClassicDesktopStyleApplicationLifetime;
+
+        // Because the caller (OnFrameworkInitializationCompleted) is `async
+        // void`, Avalonia's own startup sequence does NOT wait for it to
+        // finish - it returns control to the framework at our first `await`
+        // below. With the default ShutdownMode.OnMainWindowClose and no
+        // MainWindow assigned yet, the framework can (and did, in testing)
+        // conclude there's nothing keeping it alive and shut down immediately
+        // - no window, no error, the process just exits. Switching to
+        // OnExplicitShutdown here prevents that until we've actually
+        // assigned a MainWindow below.
+        if (desktop is not null)
+            desktop.ShutdownMode = ShutdownMode.OnExplicitShutdown;
+
+        // First-run DB init: apply migrations, WAL mode, seed defaults.
+        // Any failure here is a hard-stop condition (can't run without a DB),
+        // so it's logged and surfaced before any window opens.
+        try
+        {
+            // CreateAsyncScope + await using rather than CreateScope + using:
+            // IUnitOfWork's implementation (UnitOfWork) only implements
+            // IAsyncDisposable, not IDisposable - synchronously disposing a
+            // scope that resolved it throws InvalidOperationException
+            // ("type only implements IAsyncDisposable"). This particular
+            // scope only resolves LancyDbContext directly, not IUnitOfWork,
+            // so it likely wouldn't have hit the bug here - fixed anyway for
+            // consistency and to close off the risk if that ever changes.
+            await using var scope = Services.CreateAsyncScope();
+            var db = scope.ServiceProvider.GetRequiredService<LancyDbContext>();
+            await Lancy.Data.Seed.DatabaseInitializer.InitializeAsync(db);
+        }
+        catch (Exception ex)
+        {
+            Log.Fatal(ex, "Database initialization failed");
+            // TODO (module phase): show a native error dialog here instead of
+            // silently continuing - Avalonia dialog wiring lands with the
+            // first-run flow implementation.
+        }
+
+        if (Environment.GetEnvironmentVariable("LANCY_CAPTURE_SCREENSHOTS") == "1")
+        {
+            if (desktop is not null)
+            {
+                await ScreenshotGenerator.RunAsync(desktop, Services);
+                desktop.Shutdown();
+                return;
+            }
+        }
+
+        var startupWindow = await ResolveStartupWindowAsync();
+
+        if (desktop is not null)
+        {
+            desktop.MainWindow = startupWindow;
+            desktop.MainWindow.Show();
+
+            // Hand shutdown behavior back to the normal
+            // close-the-main-window policy now that a window actually exists.
+            desktop.ShutdownMode = ShutdownMode.OnMainWindowClose;
+
+            SingleInstanceService.ActivationRequested += () =>
+            {
+                global::Avalonia.Threading.Dispatcher.UIThread.Post(() =>
+                {
+                    if (desktop.MainWindow is { } w)
+                    {
+                        w.WindowState = global::Avalonia.Controls.WindowState.Normal;
+                        w.Activate();
+                    }
+                });
+            };
+
+            desktop.ShutdownRequested += (_, _) =>
+            {
+                // The rotating auto-backup is already taken by MainWindow.OnClosing
+                // before the window closes - doing it again here wrote a second
+                // backup on every exit (halving the effective retention).
+                _lifetimeCts.Cancel();
+                Log.CloseAndFlush();
+            };
+
+            // Start auto-updater loop
+            Services.GetRequiredService<UpdateService>().Initialize();
+        }
+    }
+
+    /// <summary>
+    /// Routes to the correct first window based on app state:
+    /// Terms not accepted -> Onboarding flow (Welcome -> Terms -> Data Location -> Ready)
+    /// Terms accepted -> MainWindow shell directly (no login gate)
+    /// </summary>
+    private async Task<global::Avalonia.Controls.Window> ResolveStartupWindowAsync()
+    {
+        // CreateAsyncScope + await using: this scope resolves IUnitOfWork,
+        // and UnitOfWork only implements IAsyncDisposable - synchronously
+        // disposing this scope threw "type only implements
+        // IAsyncDisposable. Use DisposeAsync to dispose the container." on
+        // every single startup. This was the actual cause of the app
+        // silently exiting with no window.
+        await using var scope = Services.CreateAsyncScope();
+        var uow = scope.ServiceProvider.GetRequiredService<IUnitOfWork>();
+
+        await ApplyPersistedSessionStateAsync(scope.ServiceProvider, uow);
+
+        var terms = await uow.Terms.GetLatestAsync();
+        var hasAcceptedCurrentTerms = terms is { Accepted: true } && terms.TermsVersion == OnboardingConstants.CurrentTermsVersion;
+
+        if (!hasAcceptedCurrentTerms)
+        {
+            var onboardingVm = Services.GetRequiredService<OnboardingFlowViewModel>();
+            return new Views.Onboarding.OnboardingWindow { DataContext = onboardingVm };
+        }
+
+        var mainVm = Services.GetRequiredService<MainWindowViewModel>();
+        return new Views.Shell.MainWindow { DataContext = mainVm };
+    }
+
+    /// <summary>
+    /// Appearance/currency, trash purge, recurring-expense spawn - once-per-
+    /// launch housekeeping that runs right after DB access is confirmed
+    /// working, before the terms/onboarding check above decides which
+    /// window to show.
+    /// </summary>
+    public static async Task ApplyPersistedSessionStateAsync(IServiceProvider scopedProvider, IUnitOfWork uow)
+    {
+        // Re-apply persisted appearance (theme/accent) and currency-symbol
+        // culture on every launch. Previously these were only ever applied
+        // in-memory when the user hit Save on the Settings page - saved to
+        // the DB correctly, but silently reverting to FluentTheme defaults
+        // (light-variant look, "\u00a4" generic currency sign instead of
+        // the user's chosen symbol) every time the app was relaunched, even
+        // though Settings itself would still show the "saved" values.
+        try
+        {
+            var settings = await uow.Settings.GetAppSettingsAsync();
+            AppCulture.Apply(settings.CurrencySymbol);
+
+            var prefs = await uow.Settings.GetUiPreferencesAsync();
+            scopedProvider.GetRequiredService<ThemeService>().Apply(prefs.Theme, prefs.AccentColor);
+        }
+        catch (Exception ex)
+        {
+            // Non-fatal: worst case the app opens with default theme/currency
+            // formatting for this one session rather than failing to start.
+            Log.Warning(ex, "Failed to apply persisted appearance/currency settings at startup");
+        }
+
+        // Permanently remove anything that's been sitting in the trash
+        // longer than 30 days (TrashService.PurgeExpiredAsync already
+        // swallows its own errors internally - never worth blocking
+        // startup over a failed purge).
+        await scopedProvider.GetRequiredService<TrashService>().PurgeExpiredAsync();
+
+        // Spawn any recurring expenses (software subscriptions, retainers,
+        // etc.) whose next scheduled occurrence has arrived since the app
+        // was last opened. Same "swallow errors, never block startup" policy
+        // as the trash purge above - see ExpenseService.ProcessDueRecurrencesAsync.
+        await scopedProvider.GetRequiredService<ExpenseService>().ProcessDueRecurrencesAsync();
+    }
+
+    private static void ConfigureDiagnosticLogging()
+    {
+        // Developer-facing rotating diagnostic log - distinct from the
+        // business-facing AuditLog table (Phase 1 audit §2.10). Rolls daily,
+        // keeps 14 days, written to the OS-appropriate log directory.
+        var logPath = System.IO.Path.Combine(LancyPaths.GetLogsDirectory(), "lancy-.log");
+        Log.Logger = new LoggerConfiguration()
+            .MinimumLevel.Information()
+            .WriteTo.File(logPath, rollingInterval: RollingInterval.Day, retainedFileCountLimit: 14)
+            .CreateLogger();
+
+        Log.Information("Lancy starting up");
+    }
+
+    private static void ConfigureServices(ServiceCollection services)
+    {
+        // Data layer
+        services.AddDbContext<LancyDbContext>(opt =>
+            opt.UseSqlite(LancyDbContextOptionsFactory.BuildConnectionString()));
+        services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+        // Core services
+        services.AddScoped<ClientService>();
+        services.AddScoped<CommissionService>();
+        services.AddScoped<PaymentService>();
+        services.AddScoped<AttachmentService>();
+
+        services.AddScoped<ExpenseService>();
+        services.AddScoped<GlobalSearchService>();
+
+        services.AddScoped<MetricsService>();
+        services.AddScoped<TaxSummaryService>();
+        services.AddScoped<TrashService>();
+        services.AddScoped<BackupService>();
+        services.AddScoped<CsvExportService>();
+
+        // PDF
+
+        services.AddScoped<ITaxSummaryRenderer, TaxSummaryRenderer>();
+        services.AddScoped<IInvoiceRenderer, InvoiceRenderer>();
+
+        // UI-only services
+        services.AddSingleton<NavigationService>();
+        services.AddSingleton<DialogService>();
+        services.AddSingleton<ThemeService>();
+        services.AddSingleton<WindowStateService>();
+        services.AddSingleton<KeySequenceService>();
+        services.AddSingleton<UpdateService>();
+
+        // ViewModels (Transient - fresh state each navigation)
+        services.AddTransient<OnboardingFlowViewModel>();
+        services.AddTransient<MainWindowViewModel>();
+
+        // Clients module (Phase 4)
+        services.AddTransient<ViewModels.Clients.ClientsListViewModel>();
+        services.AddTransient<ViewModels.Clients.ClientProfileViewModel>();
+        // ClientFormViewModel is constructed directly (not resolved via DI)
+        // by ClientsListViewModel, since it needs a runtime `existing: Client?`
+        // constructor argument that doesn't fit the container's parameterless
+        // resolution model - it still gets a properly-scoped ClientService
+        // passed in from the caller, which itself came from DI.
+
+        // Commissions module (Phase 4)
+        services.AddTransient<ViewModels.Commissions.CommissionsListViewModel>();
+        services.AddTransient<ViewModels.Commissions.CommissionProfileViewModel>();
+        // CommissionFormViewModel is constructed directly by
+        // CommissionsListViewModel for the same reason as ClientFormViewModel above.
+
+        // Payments module (Phase 4)
+        services.AddTransient<ViewModels.Payments.PaymentsListViewModel>();
+        // PaymentFormViewModel is constructed directly by PaymentsListViewModel,
+        // same pattern as the other module forms above.
+
+
+
+        // Expenses module (Phase 4)
+        services.AddTransient<ViewModels.Expenses.ExpensesListViewModel>();
+        // ExpenseFormViewModel is constructed directly by ExpensesListViewModel.
+
+        // Goals module (Phase 4) - single-row settings-style page, no list.
+        services.AddTransient<ViewModels.Goals.GoalsViewModel>();
+
+        // Dashboard / Analytics (Phase 4)
+        services.AddTransient<ViewModels.Dashboard.DashboardViewModel>();
+        services.AddTransient<ViewModels.Analytics.AnalyticsViewModel>();
+
+        // Settings (Phase 4)
+        services.AddTransient<ViewModels.Settings.SettingsViewModel>();
+
+
+
+        // Logs (Phase 4) - read-only.
+        services.AddTransient<ViewModels.Logs.LogsViewModel>();
+        services.AddTransient<ViewModels.Trash.TrashViewModel>();
+
+        // Backup (Phase 4)
+        services.AddTransient<ViewModels.Backup.BackupViewModel>();
+    }
+}

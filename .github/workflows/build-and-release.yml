@@ -19,7 +19,7 @@ jobs:
           dotnet-version: '8.0.x'
       - run: dotnet restore
       - run: dotnet build --no-restore -c Release
-      - run: dotnet test src/FcmsPro.Tests --no-build -c Release --logger "console;verbosity=normal"
+      - run: dotnet test src/Lancy.Tests --no-build -c Release --logger "console;verbosity=normal"
 
   build-windows:
     name: Package - Windows
@@ -36,14 +36,14 @@ jobs:
         run: bash .github/set-version.sh "${GITHUB_REF_NAME#v}"
       - name: Publish self-contained win-x64
         run: >
-          dotnet publish src/FcmsPro.Avalonia/FcmsPro.Avalonia.csproj
+          dotnet publish src/Lancy.Avalonia/Lancy.Avalonia.csproj
           -c Release -r win-x64 --self-contained true
           -p:PublishSingleFile=true
           -o installers/windows/publish
       - name: Install Inno Setup
         run: choco install innosetup -y
       - name: Build installer
-        run: '"C:\Program Files (x86)\Inno Setup 6\iscc.exe" installers\windows\fcmspro.iss'
+        run: '"C:\Program Files (x86)\Inno Setup 6\iscc.exe" installers\windows\lancy.iss'
         shell: cmd
       - uses: actions/upload-artifact@v4
         with:

@@ -13,8 +13,8 @@ stamp() { # file, sed-expression
   echo "stamped $1"
 }
 
-stamp src/FcmsPro.Avalonia/FcmsPro.Avalonia.csproj "s|<Version>[^<]*</Version>|<Version>${V}</Version>|"
-stamp installers/windows/fcmspro.iss               "s|^#define MyAppVersion \"[^\"]*\"|#define MyAppVersion \"${V}\"|"
+stamp src/Lancy.Avalonia/Lancy.Avalonia.csproj "s|<Version>[^<]*</Version>|<Version>${V}</Version>|"
+stamp installers/windows/lancy.iss               "s|^#define MyAppVersion \"[^\"]*\"|#define MyAppVersion \"${V}\"|"
 stamp installers/macos/build-dmg.sh                "s|^VERSION=\"[^\"]*\"|VERSION=\"${V}\"|"
 stamp installers/linux/build-deb.sh                "s|^VERSION=\"[^\"]*\"|VERSION=\"${V}\"|"
 stamp installers/linux/build-appimage.sh           "s|^VERSION=\"[^\"]*\"|VERSION=\"${V}\"|"

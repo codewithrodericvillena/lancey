@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
-"""Builds the static FCMS Pro website into a deployable folder.
+"""Builds the static Lancy website into a deployable folder.
 
     python3 scripts/build-site.py --src site --data _build/data \
         --guide docs/USER_GUIDE.md --changelog CHANGELOG.md \
-        --site-url https://villenaderic.github.io/FcmsPro --out _site
+        --site-url https://codewithrodericvillena.github.io/lancey --out _site
 
 What it does (Python standard library only, no network access):
   * copies everything in --src to --out, skipping names that start with "_" or "."
@@ -51,8 +51,8 @@ from datetime import datetime, timezone
 from pathlib import Path
 from urllib.parse import urlparse
 
-REPO = "villenaderic/FcmsPro"
-DEFAULT_SITE_URL = "https://villenaderic.github.io/FcmsPro/"
+REPO = "codewithrodericvillena/lancey"
+DEFAULT_SITE_URL = "https://codewithrodericvillena.github.io/lancey/"
 LATEST_URL = f"https://github.com/{REPO}/releases/latest"
 ASSET_KEYS = ("windows", "macos", "linux_deb", "linux_appimage")
 ASSET_LABELS = {
@@ -68,15 +68,15 @@ PROCESSED_NAMES = {"sw.js"}
 # otherwise the labelled "Sample data" mockup in _partials/mockups/NAME.html.
 # Dropping the real file in is therefore the ONLY step needed: no template edit.
 SHOT_ALT = {
-    "dashboard": "FCMS Pro dashboard with income, balances and due-soon warnings",
-    "commissions": "FCMS Pro commissions table with status badges and client details",
-    "commissions-kanban": "FCMS Pro commissions table grouped by status",
-    "clients": "FCMS Pro client profile with balances, history and attachments",
-    "tax-pdf": "Tax and quarterly summary exported to PDF from FCMS Pro",
-    "invoice-pdf": "Tax and quarterly summary exported to PDF from FCMS Pro",
-    "analytics": "FCMS Pro analytics with income breakdown charts",
-    "search": "FCMS Pro global search opened with the / shortcut",
-    "dashboard-light": "FCMS Pro dashboard in the light theme",
+    "dashboard": "Lancy dashboard with income, balances and due-soon warnings",
+    "commissions": "Lancy commissions table with status badges and client details",
+    "commissions-kanban": "Lancy commissions table grouped by status",
+    "clients": "Lancy client profile with balances, history and attachments",
+    "tax-pdf": "Tax and quarterly summary exported to PDF from Lancy",
+    "invoice-pdf": "Tax and quarterly summary exported to PDF from Lancy",
+    "analytics": "Lancy analytics with income breakdown charts",
+    "search": "Lancy global search opened with the / shortcut",
+    "dashboard-light": "Lancy dashboard in the light theme",
 }
 
 
@@ -374,7 +374,7 @@ def build_jsonld(release, site_url):
     return {
         "@context": "https://schema.org",
         "@type": "SoftwareApplication",
-        "name": "FCMS Pro",
+        "name": "Lancy",
         "alternateName": "Freelance Commission Management System",
         "applicationCategory": "BusinessApplication",
         "operatingSystem": "Windows, macOS, Linux",
@@ -729,7 +729,7 @@ class Site:
 
 
 def main(argv=None):
-    ap = argparse.ArgumentParser(description="Build the FCMS Pro static website.")
+    ap = argparse.ArgumentParser(description="Build the Lancy static website.")
     ap.add_argument("--src", default="site")
     ap.add_argument("--data", default="_build/data")
     ap.add_argument("--guide", default="docs/USER_GUIDE.md")

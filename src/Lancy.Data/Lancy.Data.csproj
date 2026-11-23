@@ -1,0 +1,28 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <RootNamespace>Lancy.Data</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!--
+      Plain Microsoft.EntityFrameworkCore.Sqlite - database encryption
+      (SQLCipher, then SQLite3 Multiple Ciphers) was tried and removed
+      after repeated unresolved failures; see LancyDbContextOptionsFactory's
+      comment. This is back to the default unencrypted native SQLite bundle.
+    -->
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.10" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.10">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Lancy.Core\Lancy.Core.csproj" />
+  </ItemGroup>
+
+</Project>

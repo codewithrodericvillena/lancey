@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# FCMS Pro - macOS .app bundle + .dmg builder
+# Lancy - macOS .app bundle + .dmg builder
 #
 # Prerequisites:
 #   - .NET 8 SDK
@@ -13,17 +13,17 @@ set -euo pipefail
 
 ARCH="${1:-arm64}"
 RID="osx-${ARCH}"
-APP_NAME="FCMS Pro"
-BUNDLE_ID="com.fcmspro.desktop"
-VERSION="1.6.9"
-PROJECT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../../src/FcmsPro.Avalonia" && pwd)"
+APP_NAME="Lancy"
+BUNDLE_ID="com.lancy.desktop"
+VERSION="2.0.0"
+PROJECT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../../src/Lancy.Avalonia" && pwd)"
 BUILD_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/build"
 APP_BUNDLE="${BUILD_DIR}/${APP_NAME}.app"
 
 echo "==> Publishing self-contained ${RID} build..."
 rm -rf "${BUILD_DIR}"
 mkdir -p "${BUILD_DIR}"
-dotnet publish "${PROJECT_DIR}/FcmsPro.Avalonia.csproj" \
+dotnet publish "${PROJECT_DIR}/Lancy.Avalonia.csproj" \
   -c Release -r "${RID}" --self-contained true \
   -p:PublishSingleFile=true \
   -o "${BUILD_DIR}/publish"
@@ -47,7 +47,7 @@ cat > "${APP_BUNDLE}/Contents/Info.plist" << PLIST
     <key>CFBundleShortVersionString</key>
     <string>${VERSION}</string>
     <key>CFBundleExecutable</key>
-    <string>FcmsPro</string>
+    <string>Lancy</string>
     <key>CFBundleIconFile</key>
     <string>app.icns</string>
     <key>CFBundlePackageType</key>
@@ -80,7 +80,7 @@ create-dmg \
   --window-size 500 300 \
   --icon-size 100 \
   --app-drop-link 380 150 \
-  "${BUILD_DIR}/FcmsPro-${VERSION}-${ARCH}.dmg" \
+  "${BUILD_DIR}/Lancy-${VERSION}-${ARCH}.dmg" \
   "${APP_BUNDLE}" || echo "create-dmg failed - .app bundle is still available at ${APP_BUNDLE}"
 
 echo "==> Done. Output in ${BUILD_DIR}"

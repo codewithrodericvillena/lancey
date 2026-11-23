@@ -1,10 +1,10 @@
-Package: fcmspro
-Version: 1.6.9
+Package: lancy
+Version: 2.0.0
 Section: office
 Priority: optional
 Architecture: amd64
 Maintainer: Roderic Villena <villenaderic@gmail.com>
-Description: FCMS Pro - Freelance Commission Management System
+Description: Lancy - Freelance Commission Management System
  Cross-platform desktop app for managing freelance commissions, clients,
  invoices, quotes, payments, and receipts. All data is stored locally in
  a SQLite database - no cloud sync, no external server dependency.

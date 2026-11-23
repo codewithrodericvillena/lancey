@@ -1,4 +1,6 @@
-# FCMS Pro
+# Lancy
+
+> Formerly **FCMS Pro**. Existing FCMS Pro data is imported automatically on first launch.
 
 A desktop app for freelancers to track commissions, invoices, quotes, payments, and expenses.
 Runs entirely on your own machine. No account, no server, no subscription.
@@ -8,21 +10,19 @@ Built with Avalonia UI on .NET 8. One codebase, native builds for Windows, macOS
 ## Why local-first
 
 Most commission and invoice tools for freelancers are subscription SaaS products with your
-financial data sitting on someone else's server. FCMS Pro takes the opposite approach: everything
+financial data sitting on someone else's server. Lancy takes the opposite approach: everything
 runs on your own machine, in a single SQLite file you control. No account to create, no monthly
 fee, no risk of a company shutting down and taking your records with it.
 
 ## Screenshots
 
-<!-- Add screenshots here, for example:
-![Dashboard](docs/screenshots/dashboard.png)
-![Kanban board](docs/screenshots/kanban.png)
--->
+![Dashboard](site/assets/img/screenshots/dashboard.png)
+![Commissions](site/assets/img/screenshots/commissions.png)
 
 ## Download
 
 Get the latest release for your operating system from the
-[Releases page](https://github.com/villenaderic/FcmsPro/releases).
+[Releases page](https://github.com/codewithrodericvillena/lancey/releases).
 
 | Platform | File |
 |---|---|
@@ -48,15 +48,16 @@ anyway." On macOS, right click the app and choose "Open," then confirm.
 - **Expenses** with category tracking and support for recurring subscriptions
 - **Analytics & Tax Summary** with income breakdowns and full-page PDF tax and quarterly summary exports
 - **Goals** for monthly and yearly freelance income and expense targets
+- **Invoice PDF** for any commission, with your business details, payments received, and the balance due
 - **Global search** across clients, commissions, payments, and expenses, triggered by pressing `/` anywhere
-- **Automatic local backups** on exit with a configurable retention count, plus manual JSON export and import
+- **Automatic local backups** on exit with a configurable retention count, plus manual JSON export and import, and CSV export for spreadsheets and accountants
 - **Soft delete and Trash** with a 30-day recovery window for deleted records
 - **App Tour** guided onboarding walk-through for new users
 - **Software Updates** with Ed25519 cryptographic signing, on-demand checks, and What's New notes
 
 ## Your data stays local
 
-FCMS Pro stores everything in a SQLite file on your own computer. There is no server, no account,
+Lancy stores everything in a SQLite file on your own computer. There is no server, no account,
 and no telemetry. This also means backups are your responsibility. Use the built in backup and
 export feature regularly, since there is no cloud copy to restore from if the file is lost or
 corrupted.
@@ -74,20 +75,20 @@ corrupted.
 Requires the [.NET 8 SDK](https://dotnet.microsoft.com/download/dotnet/8.0).
 
 ```bash
-git clone https://github.com/villenaderic/FcmsPro.git
-cd FcmsPro
+git clone https://github.com/codewithrodericvillena/lancey.git
+cd Lancy
 dotnet restore
 dotnet build
-dotnet run --project src/FcmsPro.Avalonia
+dotnet run --project src/Lancy.Avalonia
 ```
 
-Database migrations are already checked into `src/FcmsPro.Data/Migrations` and are applied
+Database migrations are already checked into `src/Lancy.Data/Migrations` and are applied
 automatically on first launch. There is no manual migration step for a normal run.
 
 Run the test suite with:
 
 ```bash
-dotnet test src/FcmsPro.Tests
+dotnet test src/Lancy.Tests
 ```
 
 ## Building installers yourself
@@ -115,7 +116,7 @@ release history. See `docs/SITE_ARCHITECTURE.md` for details on how the website 
 
 ## How the website updates itself
 
-The official website (<https://villenaderic.github.io/FcmsPro/>) updates automatically without manual edits:
+The official website (<https://codewithrodericvillena.github.io/lancey/>) updates automatically without manual edits:
 
 1. **Tag Trigger**: Pushing a tag `vX.Y.Z` builds the release installers and publishes a GitHub Release with notes extracted from `CHANGELOG.md` and `SHA256SUMS.txt`.
 2. **Site Deployment**: `.github/workflows/pages.yml` triggers via `workflow_run` after the release completes, queries the GitHub Releases API with `GITHUB_TOKEN`, pre-renders all version numbers, download links, file sizes, SHA-256 checksums, release history, and documentation into static HTML, and deploys directly to GitHub Pages.

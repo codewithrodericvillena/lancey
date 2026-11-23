@@ -32,9 +32,9 @@ import time
 import urllib.request
 from datetime import datetime, timezone
 
-REPO = "villenaderic/FcmsPro"
+REPO = "codewithrodericvillena/lancey"
 HISTORY_LIMIT = 10
-USER_AGENT = "FcmsPro-Site-Builder"
+USER_AGENT = "Lancy-Site-Builder"
 
 # extension -> asset key. Order matters only for the key names exposed to the site.
 ASSET_KINDS = {

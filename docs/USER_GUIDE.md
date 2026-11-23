@@ -1,12 +1,12 @@
-# FCMS Pro — User Guide
+# Lancy — User Guide
 
 > **Prefer video?** Watch the [Official 3-Minute Video Walkthrough on YouTube](https://www.youtube.com/watch?v=wxfsJB4re-M) covering installation, key features, and client workflows.
 
 ## Getting Started
 
-The first time you launch FCMS Pro, you'll go through a short first-run setup:
+The first time you launch Lancy, you'll go through a short first-run setup:
 
-1. **Welcome** — a quick intro to FCMS Pro.
+1. **Welcome** — a quick intro to Lancy.
 2. **Terms & Data Handling** — explains that all your data stays on this computer (no cloud sync), and that you're responsible for your own backups.
 3. **Where Your Data Lives** — displays the folder your SQLite database is stored in, with an option to select a custom data folder.
 4. **Quick Start Guide** — a fast overview of key concepts, shortcuts, and navigation.
@@ -59,6 +59,7 @@ Track each commission from inquiry to delivery:
 - **Sorting & Filtering**: filter by status or search by commission title and client name.
 - **Recurring commissions**: set a recurrence frequency (weekly, biweekly, monthly) to automatically create the next commission as soon as the current one is marked **Delivered**.
 - **Attachments**: upload reference images and project files directly to any commission.
+- **Invoice PDF**: open a commission and click **Invoice PDF** to save a client-ready invoice (your business details from Settings, the job, payments received, and the balance due). Fill in your business name, address and contact details in Settings first so they appear on it.
 
 ## Payments & Income
 
@@ -88,14 +89,17 @@ Set monthly and annual income targets and expense budgets to visualize progress 
 ## Backup & Restore
 
 - **Export**: save your entire database — clients, commissions, payments, expenses, and settings — to a portable `.json` file.
+- **CSV export**: save clients, commissions, payments, and expenses as separate `.csv` files (UTF-8, opens in Excel and Google Sheets) into a folder you choose.
 - **Import**: restore from a backup file, with options to **merge** records or **replace** all local data.
-- **Automatic Backups**: FCMS Pro automatically creates local database backups upon app exit, retaining a configurable number of backup archives in your data directory.
+- **Automatic Backups**: Lancy automatically creates local database backups upon app exit, retaining a configurable number of backup archives in your data directory.
 
 ## Trash (Soft Delete)
 
 Accidentally deleted a client, commission, payment, or expense? Deleted items are moved to **Trash** where they can be restored or permanently removed.
 
 ## Settings & Auto-Updates
+
+> **Coming from FCMS Pro?** Lancy copies your existing FCMS Pro data into its own folder the first time it starts, and leaves the old install untouched.
 
 - Configure your business name, freelancer contact info, currency symbol, and tax options.
 - Choose between **Dark** and **Light** themes with customizable accent colors.
@@ -107,4 +111,4 @@ A read-only audit log tracking every operation: records created, updated, soft-d
 
 ---
 
-**Questions or data management?** All data is stored in a single SQLite database (`fcms.db`) on your computer. Export backups regularly via the Backup page.
+**Questions or data management?** All data is stored in a single SQLite database (`lancy.db`) on your computer. Export backups regularly via the Backup page.

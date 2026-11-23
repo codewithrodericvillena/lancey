@@ -59,10 +59,10 @@ t("module source has no regex lookbehind (Safari < 16.4)", () => {
 
 // ---- normalisers --------------------------------------------------------------
 const good = {
-  version: "1.7.0", published_at: "2026-10-27T00:00:00Z", html_url: "https://github.com/villenaderic/FcmsPro/releases/tag/v1.7.0",
+  version: "1.7.0", published_at: "2026-10-27T00:00:00Z", html_url: "https://github.com/codewithrodericvillena/lancey/releases/tag/v1.7.0",
   highlights: ["a", "b", "c", "d"],
   assets: {
-    windows: { name: "w.exe", url: "https://github.com/villenaderic/FcmsPro/releases/download/v1.7.0/w.exe", size: 1048576, sha256: "a".repeat(64) },
+    windows: { name: "w.exe", url: "https://github.com/codewithrodericvillena/lancey/releases/download/v1.7.0/w.exe", size: 1048576, sha256: "a".repeat(64) },
     macos: { name: "evil.dmg", url: "https://evil.example/evil.dmg", size: 1, sha256: null },
   },
 };
@@ -74,11 +74,11 @@ t("normaliseSiteData drops off-repo links, caps highlights", () => {
 });
 t("normaliseApiData matches by extension, skips drafts/prereleases, uses digest", () => {
   const api = {
-    tag_name: "v1.7.0", published_at: "x", html_url: "https://github.com/villenaderic/FcmsPro/releases/tag/v1.7.0",
+    tag_name: "v1.7.0", published_at: "x", html_url: "https://github.com/codewithrodericvillena/lancey/releases/tag/v1.7.0",
     body: "## Added\n- one\n- two\n* three\n- four",
     assets: [
-      { name: "Whatever-Name.AppImage", size: 5, browser_download_url: "https://github.com/villenaderic/FcmsPro/releases/download/v1.7.0/Whatever-Name.AppImage", digest: "sha256:" + "b".repeat(64) },
-      { name: "SHA256SUMS.txt", size: 1, browser_download_url: "https://github.com/villenaderic/FcmsPro/releases/download/v1.7.0/SHA256SUMS.txt" },
+      { name: "Whatever-Name.AppImage", size: 5, browser_download_url: "https://github.com/codewithrodericvillena/lancey/releases/download/v1.7.0/Whatever-Name.AppImage", digest: "sha256:" + "b".repeat(64) },
+      { name: "SHA256SUMS.txt", size: 1, browser_download_url: "https://github.com/codewithrodericvillena/lancey/releases/download/v1.7.0/SHA256SUMS.txt" },
     ],
   };
   const r = R.normaliseApiData(api);
@@ -146,7 +146,7 @@ t("old release hides the New badge", () => {
 // ---- fallback chain (initRelease) --------------------------------------------
 async function chain({ site, api, apiCached }) {
   const calls = []; const store = new Map();
-  if (apiCached) store.set("fcms-release-api", JSON.stringify({ t: Date.now(), data: apiCached }));
+  if (apiCached) store.set("lancy-release-api", JSON.stringify({ t: Date.now(), data: apiCached }));
   globalThis.sessionStorage = { getItem: (k) => store.get(k) ?? null, setItem: (k, v) => store.set(k, v) };
   globalThis.document = Object.assign(makeDoc([]), { dispatchEvent() { return true; } });
   globalThis.CustomEvent = class { constructor(t, o) { this.type = t; this.detail = o.detail; } };
@@ -175,7 +175,7 @@ const apiRel = { tag_name: "v1.7.0", published_at: "x", assets: [], body: "- hi"
   t("tier 2: release.json down -> GitHub API, cached in sessionStorage", () => {
     assert.equal(res.source, "api");
     assert.ok(calls.some((c) => c.url.includes("api.github.com")));
-    assert.ok(store.has("fcms-release-api"));
+    assert.ok(store.has("lancy-release-api"));
   });
 }
 {

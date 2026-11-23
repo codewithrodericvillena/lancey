@@ -1,9 +1,9 @@
 /*
- * sw.js - Offline service worker for FCMS Pro.
+ * sw.js - Offline service worker for Lancy.
  * Caches application shell + assets. Network-first for /data/*.json.
  */
 
-const CACHE_NAME = 'fcms-cache-{{build_id}}';
+const CACHE_NAME = 'lancy-cache-{{build_id}}';
 
 const SHELL_URLS = [
   '{{root}}',

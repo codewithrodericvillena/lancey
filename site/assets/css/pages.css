@@ -1,4 +1,4 @@
-/* FCMS Pro website - page-level layout. Uses tokens.css / components.css only. */
+/* Lancy website - page-level layout. Uses tokens.css / components.css only. */
 
 /* ============ Shared section head ============ */
 .section-head { max-width: 680px; margin: 0 auto var(--sp-7); text-align: center; }

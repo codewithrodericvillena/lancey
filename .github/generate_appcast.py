@@ -13,7 +13,7 @@ import xml.etree.ElementTree as ET
 from datetime import datetime
 from email.utils import formatdate
 
-REPO = "villenaderic/FcmsPro"
+REPO = "codewithrodericvillena/lancey"
 SPARKLE_NS = "http://www.andymatuschak.org/xml-namespaces/sparkle"
 
 
@@ -25,7 +25,7 @@ def fetch_release():
     tag = os.environ.get("TAG", "").strip()
     path = f"tags/{tag}" if tag else "latest"
     req = urllib.request.Request(f"https://api.github.com/repos/{REPO}/releases/{path}")
-    req.add_header("User-Agent", "FcmsPro-Appcast-Generator")
+    req.add_header("User-Agent", "Lancy-Appcast-Generator")
     req.add_header("Accept", "application/vnd.github+json")
     if os.environ.get("GITHUB_TOKEN"):
         req.add_header("Authorization", f"Bearer {os.environ['GITHUB_TOKEN']}")
@@ -56,7 +56,7 @@ def os_for(name):
 
 def sign_asset(url, signer, token=None):
     req = urllib.request.Request(url)
-    req.add_header("User-Agent", "FcmsPro-Appcast-Signer")
+    req.add_header("User-Agent", "Lancy-Appcast-Signer")
     req.add_header("Accept", "application/octet-stream")
     if token:
         req.add_header("Authorization", f"Bearer {token}")
@@ -99,7 +99,7 @@ def main():
     ET.register_namespace("sparkle", SPARKLE_NS)
     rss = ET.Element("rss", {"version": "2.0"})
     channel = ET.SubElement(rss, "channel")
-    ET.SubElement(channel, "title").text = "FCMS Pro Updates"
+    ET.SubElement(channel, "title").text = "Lancy Updates"
 
     found = set()
     for asset in data.get("assets", []):

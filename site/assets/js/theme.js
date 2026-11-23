@@ -47,7 +47,7 @@ export function initHeader() {
     themeBtn.addEventListener("click", () => {
       const next = effective() === "dark" ? "light" : "dark";
       doc.setAttribute("data-theme", next);
-      try { localStorage.setItem("fcms-theme", next); } catch (e) { /* not persisted */ }
+      try { localStorage.setItem("lancy-theme", next); } catch (e) { /* not persisted */ }
       label();
     });
   }

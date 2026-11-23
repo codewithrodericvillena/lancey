@@ -1,6 +1,6 @@
 # Website architecture
 
-The website at <https://villenaderic.github.io/FcmsPro/> is **derived, never edited**
+The website at <https://codewithrodericvillena.github.io/lancey/> is **derived, never edited**
 for releases. The only thing you do to ship a version is push a tag.
 
 ```
@@ -55,7 +55,7 @@ The 6-hourly cron makes the site self-healing if a trigger is ever missed.
    if it is newer than what was pre-rendered.
 3. **`api.github.com/.../releases/latest`**, cached 10 minutes in `sessionStorage`.
 4. **Static fallback:** every button already points to
-   `https://github.com/villenaderic/FcmsPro/releases/latest`.
+   `https://github.com/codewithrodericvillena/lancey/releases/latest`.
 
 No download link in `site/` may be a versioned file name. The workflow's
 "Guard" step greps for that and fails the build.

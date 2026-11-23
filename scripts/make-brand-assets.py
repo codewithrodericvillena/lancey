@@ -91,7 +91,7 @@ def main():
     d = ImageDraw.Draw(card)
     mark = fit(logo, 300)
     card.paste(mark, (790, 165), mark)
-    d.text((80, 150), "FCMS Pro", font=font(FONT_BOLD, 96), fill=(244, 247, 252))
+    d.text((80, 150), "Lancy", font=font(FONT_BOLD, 96), fill=(244, 247, 252))
     d.text((84, 275), "Freelance commission management", font=font(FONT_REG, 36), fill=(170, 184, 208))
     d.text((84, 322), "that stays on your computer.", font=font(FONT_REG, 36), fill=(170, 184, 208))
     d.text((84, 450), "Free  \u00b7  Open source  \u00b7  No account  \u00b7  No telemetry",
@@ -100,8 +100,9 @@ def main():
            font=font(FONT_REG, 26), fill=(130, 144, 168))
     card.save(OUT / "og-card.png", optimize=True)
 
-    # Favicon: reuse the existing multi-size .ico (16/32/48) unchanged.
-    shutil.copyfile(ROOT / "docs" / "favicon.ico", ROOT / "site" / "favicon.ico")
+    # Favicon: multi-size .ico built from the logo.
+    logo.resize((256, 256), Image.LANCZOS).save(
+        ROOT / "site" / "favicon.ico", sizes=[(16, 16), (32, 32), (48, 48)])
     print("wrote", ", ".join(sorted(p.name for p in OUT.iterdir())), "+ favicon.ico")
 
 

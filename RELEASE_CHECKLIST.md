@@ -4,7 +4,7 @@ The **git tag is the only version number you set.** CI stamps it into the csproj
 scripts and .deb control file (`.github/set-version.sh`), builds all platforms, publishes the
 release, then regenerates `docs/appcast.xml` for the in-app updater.
 
-1. `dotnet build` and `dotnet test src/FcmsPro.Tests`, then click through the core flows.
+1. `dotnet build` and `dotnet test src/Lancy.Tests`, then click through the core flows.
 2. Add a section to `CHANGELOG.md`.
 3. Tag and push (tag must be exactly `vX.Y.Z`):
    ```bash

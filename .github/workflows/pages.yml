@@ -47,7 +47,7 @@ jobs:
     # - For workflow_run: only a successful run of a *tag push* (head_branch is the
     #   tag name, e.g. v1.6.9). Skips the main-branch test runs and pull requests.
     if: >-
-      github.repository == 'villenaderic/FcmsPro' &&
+      github.repository == 'codewithrodericvillena/lancey' &&
       (github.event_name != 'workflow_run' ||
         (github.event.workflow_run.conclusion == 'success' &&
          github.event.workflow_run.event == 'push' &&

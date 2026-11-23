@@ -32,7 +32,7 @@
 .mk-light {
   --surface-0: #f6f8fc; --surface-1: #ffffff; --surface-2: #eef2f9; --surface-3: #e1e8f3;
   --text: #0b1220; --text-muted: #475569; --border: #d5deec; --border-strong: #b6c3d8;
-  --accent: #2563eb; --accent-text: #1d4ed8; --on-accent: #ffffff; --accent-soft: rgba(37, 99, 235, 0.10);
+  --accent: #4f46e5; --accent-text: #4338ca; --on-accent: #ffffff; --accent-soft: rgba(79, 70, 229, 0.10);
   --success: #15803d; --success-soft: rgba(21, 128, 61, 0.12);
   --warning: #a16207; --warning-soft: rgba(161, 98, 7, 0.14);
   --danger: #b91c1c; --danger-soft: rgba(185, 28, 28, 0.10);
@@ -147,10 +147,10 @@
 .mk-desk { flex: 1; min-height: 0; display: flex; justify-content: center; padding: 1em 0 0; border-radius: 0.8em; background: var(--surface-2); overflow: hidden; }
 .mk-paper { width: 34em; padding: 2em 2.2em; background: #fff; color: #0b1220; border-radius: 0.3em 0.3em 0 0; box-shadow: 0 0.4em 1.6em rgba(0, 0, 0, 0.25); }
 .mk-paper small { display: block; color: #64748b; font-size: 0.8em; }
-.mk-paper-head { display: flex; justify-content: space-between; align-items: flex-start; padding-bottom: 1em; border-bottom: 2px solid #2563eb; }
+.mk-paper-head { display: flex; justify-content: space-between; align-items: flex-start; padding-bottom: 1em; border-bottom: 2px solid #4f46e5; }
 .mk-paper-biz { font-size: 1.3em; }
 .mk-paper-no { text-align: right; }
-.mk-paper-no b { font-size: 1.3em; letter-spacing: 0.08em; color: #2563eb; }
+.mk-paper-no b { font-size: 1.3em; letter-spacing: 0.08em; color: #4f46e5; }
 .mk-paper-meta { display: flex; gap: 2.2em; margin: 1.2em 0; }
 .mk-paper-meta b { font-size: 0.95em; }
 .mk-paper-row { display: flex; justify-content: space-between; padding: 0.6em 0; border-bottom: 1px solid #e2e8f0; font-size: 0.95em; }

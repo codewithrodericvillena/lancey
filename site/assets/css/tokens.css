@@ -1,6 +1,5 @@
-/* FCMS Pro website - design tokens.
-   Brand: deep navy surfaces + electric blue (from the existing site and the
-   app logo's cyan glow). Everything else in the CSS reads these variables, so
+/* Lancy website - design tokens.
+   Brand: deep navy surfaces + Lancy indigo (the app logo's gradient). Everything else in the CSS reads these variables, so
    a re-brand is a change to this one file.
 
    Theme selection:
@@ -57,11 +56,11 @@
   --text-muted: #475569;  /* 7.2:1 on surface-0 */
   --border: #d5deec;
   --border-strong: #b6c3d8;
-  --accent: #2563eb;      /* white text on it: 5.2:1 */
-  --accent-hover: #1d4ed8;
-  --accent-text: #1d4ed8; /* accent as text on light surfaces: 6.7:1 */
+  --accent: #4f46e5;      /* white text on it: 6.3:1 */
+  --accent-hover: #4338ca;
+  --accent-text: #4338ca; /* accent as text on light surfaces: 6.7:1 */
   --on-accent: #ffffff;
-  --accent-soft: rgba(37, 99, 235, 0.10);
+  --accent-soft: rgba(79, 70, 229, 0.10);
   --accent-2: #0891b2;    /* cyan from the logo glow, decorative only */
   --success: #15803d;
   --success-soft: rgba(21, 128, 61, 0.12);
@@ -69,12 +68,12 @@
   --warning-soft: rgba(161, 98, 7, 0.14);
   --danger: #b91c1c;
   --danger-soft: rgba(185, 28, 28, 0.10);
-  --focus: #1d4ed8;
+  --focus: #4338ca;
   --shadow-1: 0 1px 2px rgba(15, 23, 42, 0.06), 0 1px 1px rgba(15, 23, 42, 0.04);
   --shadow-2: 0 4px 12px rgba(15, 23, 42, 0.07), 0 1px 3px rgba(15, 23, 42, 0.05);
   --shadow-3: 0 18px 48px rgba(15, 23, 42, 0.14), 0 4px 12px rgba(15, 23, 42, 0.06);
   --glass: rgba(246, 248, 252, 0.78);
-  --mesh-a: rgba(37, 99, 235, 0.16);
+  --mesh-a: rgba(79, 70, 229, 0.16);
   --mesh-b: rgba(8, 145, 178, 0.12);
   --keycap-bg: linear-gradient(#ffffff, #eef2f9);
   --keycap-edge: #b6c3d8;
@@ -91,11 +90,11 @@
     --text-muted: #9aa8bd;   /* 7.6:1 on surface-0 */
     --border: #27324a;
     --border-strong: #3a4966;
-    --accent: #2563eb;       /* keeps white button text at 5.2:1 */
-    --accent-hover: #3b82f6;
-    --accent-text: #6ea8fe;  /* 8.0:1 on surface-0 */
+    --accent: #4f46e5;       /* keeps white button text at 6.3:1 */
+    --accent-hover: #6366f1;
+    --accent-text: #a5b4fc;  /* 8.0:1 on surface-0 */
     --on-accent: #ffffff;
-    --accent-soft: rgba(59, 130, 246, 0.16);
+    --accent-soft: rgba(99, 102, 241, 0.16);
     --accent-2: #22d3ee;
     --success: #4ade80;
     --success-soft: rgba(74, 222, 128, 0.14);
@@ -103,12 +102,12 @@
     --warning-soft: rgba(251, 191, 36, 0.14);
     --danger: #f87171;
     --danger-soft: rgba(248, 113, 113, 0.14);
-    --focus: #93c5fd;
+    --focus: #c7d2fe;
     --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.4);
     --shadow-2: 0 6px 16px rgba(0, 0, 0, 0.35);
     --shadow-3: 0 24px 60px rgba(0, 0, 0, 0.55), 0 4px 12px rgba(0, 0, 0, 0.35);
     --glass: rgba(11, 15, 25, 0.72);
-    --mesh-a: rgba(59, 130, 246, 0.22);
+    --mesh-a: rgba(99, 102, 241, 0.22);
     --mesh-b: rgba(34, 211, 238, 0.12);
     --keycap-bg: linear-gradient(#232d42, #1a2235);
     --keycap-edge: #0b0f19;
@@ -125,11 +124,11 @@
   --text-muted: #9aa8bd;
   --border: #27324a;
   --border-strong: #3a4966;
-  --accent: #2563eb;
-  --accent-hover: #3b82f6;
-  --accent-text: #6ea8fe;
+  --accent: #4f46e5;
+  --accent-hover: #6366f1;
+  --accent-text: #a5b4fc;
   --on-accent: #ffffff;
-  --accent-soft: rgba(59, 130, 246, 0.16);
+  --accent-soft: rgba(99, 102, 241, 0.16);
   --accent-2: #22d3ee;
   --success: #4ade80;
   --success-soft: rgba(74, 222, 128, 0.14);
@@ -137,12 +136,12 @@
   --warning-soft: rgba(251, 191, 36, 0.14);
   --danger: #f87171;
   --danger-soft: rgba(248, 113, 113, 0.14);
-  --focus: #93c5fd;
+  --focus: #c7d2fe;
   --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.4);
   --shadow-2: 0 6px 16px rgba(0, 0, 0, 0.35);
   --shadow-3: 0 24px 60px rgba(0, 0, 0, 0.55), 0 4px 12px rgba(0, 0, 0, 0.35);
   --glass: rgba(11, 15, 25, 0.72);
-  --mesh-a: rgba(59, 130, 246, 0.22);
+  --mesh-a: rgba(99, 102, 241, 0.22);
   --mesh-b: rgba(34, 211, 238, 0.12);
   --keycap-bg: linear-gradient(#232d42, #1a2235);
   --keycap-edge: #0b0f19;

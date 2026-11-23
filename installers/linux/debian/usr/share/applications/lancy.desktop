@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=Lancy
+Comment=Freelance Commission Management System
+Exec=/usr/bin/lancy-bin/Lancy
+Icon=lancy
+Type=Application
+Categories=Office;Finance;
+Terminal=false

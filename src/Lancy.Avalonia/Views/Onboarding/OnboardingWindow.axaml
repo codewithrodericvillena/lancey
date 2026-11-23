@@ -1,0 +1,79 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:Lancy.Avalonia.ViewModels.Onboarding"
+        x:Class="Lancy.Avalonia.Views.Onboarding.OnboardingWindow"
+        x:DataType="vm:OnboardingFlowViewModel"
+        Title="Welcome to Lancy"
+        Icon="/Assets/app.ico"
+        Width="640" Height="560"
+        CanResize="False"
+        WindowStartupLocation="CenterScreen">
+
+  <Grid RowDefinitions="*,Auto" Margin="32">
+
+    <!--
+      Switches on computed IsXStep bool properties (see OnboardingFlowViewModel)
+      rather than DataTemplate-per-enum-value, since Avalonia's DataTemplate
+      matching is by CLR type, not by value - an earlier version of this file
+      bound Content directly to the CurrentStep enum expecting per-member
+      templates, which does not work (every step is the same enum type, so
+      only one template would ever have matched, always showing Welcome).
+    -->
+    <Grid Grid.Row="0">
+
+      <StackPanel Spacing="16" VerticalAlignment="Center" IsVisible="{Binding IsWelcomeStep}">
+        <Image Source="avares://Lancy/Assets/logo-wordmark.png" Width="280"
+               HorizontalAlignment="Left" Margin="0,0,0,8" />
+        <TextBlock TextWrapping="Wrap"
+                   Text="Your freelance commission, payments, and client management app - now running natively, with all your data stored locally on this machine." />
+      </StackPanel>
+
+      <StackPanel Spacing="12" IsVisible="{Binding IsTermsStep}">
+        <TextBlock Text="Terms &amp; Data Handling" FontSize="20" FontWeight="Bold" />
+        <ScrollViewer Height="280" Background="{DynamicResource SystemAltHighColor}" Padding="12">
+          <TextBlock TextWrapping="Wrap" Text="Lancy operates strictly as a local application. All business data, including clients, commissions, and financial records, is stored exclusively on this computer within a local SQLite database. No data is transmitted to external servers, cloud synchronization is not utilized, and the application developers have no access to your information.&#10;&#10;Data retention and security are solely your responsibility. It is highly recommended to perform regular backups using the in-app Backup utility. In the event of hardware failure, system reformatting, or accidental deletion of the application data folder, unbacked-up data cannot be recovered.&#10;&#10;By proceeding, you acknowledge that you have read, understood, and accept these terms." />
+        </ScrollViewer>
+        <CheckBox Content="I've read and accept the above" IsChecked="{Binding TermsAccepted, Mode=TwoWay}" />
+      </StackPanel>
+
+      <StackPanel Spacing="12" IsVisible="{Binding IsDataLocationStep}">
+        <TextBlock Text="Where Your Data Lives" FontSize="20" FontWeight="Bold" />
+        <TextBlock TextWrapping="Wrap"
+                   Text="Your data will be stored at the location below. This is the standard app-data location for your operating system and isn't user-changeable in this version." />
+        <Border Background="{DynamicResource SystemAltHighColor}" CornerRadius="6" Padding="12">
+          <SelectableTextBlock Text="{Binding SelectedDataDirectory}" FontFamily="Consolas,Menlo,monospace" TextWrapping="Wrap" />
+        </Border>
+      </StackPanel>
+
+      <StackPanel Spacing="16" VerticalAlignment="Center" IsVisible="{Binding IsGuideStep}">
+        <TextBlock Text="Quick Start Guide" FontSize="24" FontWeight="Bold" />
+        <TextBlock TextWrapping="Wrap" Margin="0,0,0,8"
+                   Text="Welcome! Since this is a completely offline app, you're the master of your own data. Here is how you should start:" />
+        <StackPanel Spacing="8">
+            <TextBlock Text="1. Create a Client on the Clients page." FontWeight="SemiBold" />
+            <TextBlock Text="2. Go to Commissions and start your first project." FontWeight="SemiBold" />
+            <TextBlock Text="3. Add payments inside the commission as you receive them." FontWeight="SemiBold" />
+            <TextBlock Text="4. Regularly export a Backup file so you never lose your work." FontWeight="SemiBold" />
+        </StackPanel>
+      </StackPanel>
+
+      <StackPanel Spacing="16" VerticalAlignment="Center" IsVisible="{Binding IsReadyStep}">
+        <TextBlock Text="You're All Set" FontSize="24" FontWeight="Bold" />
+        <TextBlock TextWrapping="Wrap"
+                   Text="Your data location is ready. Click Finish to start using Lancy." />
+      </StackPanel>
+
+    </Grid>
+
+    <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right" Spacing="8" Margin="0,16,0,0">
+      <Button Content="Back" Command="{Binding GoBackCommand}" IsVisible="{Binding !IsWelcomeStep}" />
+
+      <Button Content="Get Started" Command="{Binding GoToTermsCommand}" IsVisible="{Binding IsWelcomeStep}" Classes="accent" IsDefault="True" />
+      <Button Content="I Accept" Command="{Binding AcceptTermsCommand}" IsVisible="{Binding IsTermsStep}" Classes="accent" IsDefault="True" />
+      <Button Content="Continue" Command="{Binding ConfirmDataLocationCommand}" IsVisible="{Binding IsDataLocationStep}" Classes="accent" IsDefault="True" />
+      <Button Content="Continue to App" Command="{Binding ConfirmGuideCommand}" IsVisible="{Binding IsGuideStep}" Classes="accent" IsDefault="True" />
+      <Button Content="Finish" Command="{Binding FinishCommand}" IsVisible="{Binding IsReadyStep}" Classes="accent" IsDefault="True" />
+    </StackPanel>
+
+  </Grid>
+</Window>

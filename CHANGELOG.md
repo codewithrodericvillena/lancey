@@ -1,7 +1,26 @@
 # Changelog
 
-All notable changes to FCMS Pro are documented here. Format loosely follows
+All notable changes to Lancy (formerly FCMS Pro) are documented here. Format loosely follows
 [Keep a Changelog](https://keepachangelog.com/).
+
+## [2.0.0]
+
+FCMS Pro is now **Lancy**. Same local-first app, new name, new look, and new tools for getting paid.
+
+### Added
+- **Invoice PDF**: export a client-ready invoice from any commission page, with your business details, the job, payments received and the balance due.
+- **CSV export**: save clients, commissions, payments and expenses as spreadsheet files from the Backup page.
+- Sidebar version badge with a one-click "Check for updates".
+- Your existing FCMS Pro data (database, attachments, backups) is copied into Lancy automatically on first launch. The old install is left untouched.
+
+### Changed
+- New brand: Lancy logo, app icons, installers and website.
+- Redesigned sidebar with grouped sections and a clearer active-page indicator; softer corners and spacing across the app.
+- Updates now come from the new Lancy release feed and are signed with a new key. Install this version manually once; later updates are automatic.
+
+### Fixed
+- The active sidebar item was unreadable in the Light theme.
+- Saving a backup now offers a JSON file type instead of PDF.
 
 ## [1.6.9]
 

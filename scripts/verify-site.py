@@ -30,9 +30,9 @@ for hf in html_files:
         clean = val.split("?")[0].split("#")[0]
         if not clean:
             continue
-        # handle /FcmsPro/ base url for GitHub Pages
-        if clean.startswith("/FcmsPro/"):
-            target = (site_dir / clean.removeprefix("/FcmsPro/")).resolve()
+        # handle /lancey/ base url for GitHub Pages
+        if clean.startswith("/lancey/"):
+            target = (site_dir / clean.removeprefix("/lancey/")).resolve()
         else:
             target = (hf.parent / clean).resolve()
         if target.is_dir():
@@ -53,7 +53,7 @@ index_text = (site_dir / "index.html").read_text(encoding="utf-8")
 required_links = [
     "https://ko-fi.com/villenaderic",
     "https://m.me/roderic.villena",
-    "https://github.com/villenaderic/FcmsPro/issues/new/choose"
+    "https://github.com/codewithrodericvillena/lancey/issues/new/choose"
 ]
 for req in required_links:
     if req not in index_text:

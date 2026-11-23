@@ -2,13 +2,13 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<title>Download FCMS Pro for Windows, macOS and Linux</title>
-<meta name="description" content="Download FCMS Pro {{version}}: free, open-source freelance commission management for Windows, macOS (Apple Silicon) and Linux. Checksums included.">
+<title>Download Lancy for Windows, macOS and Linux</title>
+<meta name="description" content="Download Lancy {{version}}: free, open-source freelance commission management for Windows, macOS (Apple Silicon) and Linux. Checksums included.">
 <link rel="canonical" href="{{canonical}}">
-<meta property="og:title" content="Download FCMS Pro">
+<meta property="og:title" content="Download Lancy">
 <meta property="og:description" content="Free, open source, no account. Installers for Windows, macOS (Apple Silicon) and Linux, with SHA-256 checksums.">
 <meta property="og:url" content="{{canonical}}">
-<meta name="twitter:title" content="Download FCMS Pro">
+<meta name="twitter:title" content="Download Lancy">
 <meta name="twitter:description" content="Installers for Windows, macOS (Apple Silicon) and Linux, with SHA-256 checksums.">
 {{include:_partials/head.html}}
 <script type="application/ld+json">{{jsonld_json}}</script>
@@ -20,7 +20,7 @@
 <section class="page-head">
   <div class="container">
     <p class="eyebrow">Version <span data-release="version">{{version}}</span> <span class="badge badge--new" data-release="new-badge" hidden>New</span></p>
-    <h1>Download FCMS Pro</h1>
+    <h1>Download Lancy</h1>
     <p>Free and open source. No account, no subscription, no telemetry.
       Released <time data-release="date" datetime="{{published}}">{{published|date}}</time>.</p>
     <p class="muted" data-release="status" aria-live="polite"></p>
@@ -58,8 +58,8 @@
             <strong>Install</strong>
             <ol>
               <li>Run the installer you downloaded.</li>
-              <li>Windows SmartScreen may say <em>Windows protected your PC</em>. FCMS Pro is not code signed, so this is expected. Click <em>More info</em>, then <em>Run anyway</em>.</li>
-              <li>Follow the setup, then open FCMS Pro. The first-run setup shows you where your data folder is.</li>
+              <li>Windows SmartScreen may say <em>Windows protected your PC</em>. Lancy is not code signed, so this is expected. Click <em>More info</em>, then <em>Run anyway</em>.</li>
+              <li>Follow the setup, then open Lancy. The first-run setup shows you where your data folder is.</li>
             </ol>
           </div>
         </article>
@@ -76,7 +76,7 @@
             <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-download"/></svg>Download for macOS <span class="meta">.dmg &middot; {{asset.macos.size}}</span></a>
         </div>
           <div class="callout callout--warning">
-            <strong>Apple Silicon only.</strong> There is no Intel Mac build yet. If you need one, <a href="https://github.com/villenaderic/FcmsPro/issues/new?template=feature_request.yml&amp;title=Build%20request%3A%20Intel%20Mac" rel="noopener noreferrer">open a request</a>.
+            <strong>Apple Silicon only.</strong> There is no Intel Mac build yet. If you need one, <a href="https://github.com/codewithrodericvillena/lancey/issues/new?template=feature_request.yml&amp;title=Build%20request%3A%20Intel%20Mac" rel="noopener noreferrer">open a request</a>.
           </div>
           <dl>
           <dt>File</dt><dd><code data-asset-name="macos">{{asset.macos.name}}</code></dd>
@@ -86,10 +86,10 @@
           <div>
             <strong>Install</strong>
             <ol>
-              <li>Open the <code>.dmg</code> and drag FCMS Pro into Applications.</li>
+              <li>Open the <code>.dmg</code> and drag Lancy into Applications.</li>
               <li>The app is not signed with an Apple Developer ID, so Gatekeeper may refuse a normal double-click.</li>
               <li>On macOS 14 or earlier: right-click the app, choose <em>Open</em>, then confirm.</li>
-              <li>On macOS 15 or newer that right-click shortcut no longer works. Try to open the app once, then go to <em>System Settings &rarr; Privacy &amp; Security</em>, scroll to the message about FCMS Pro and click <em>Open Anyway</em>.</li>
+              <li>On macOS 15 or newer that right-click shortcut no longer works. Try to open the app once, then go to <em>System Settings &rarr; Privacy &amp; Security</em>, scroll to the message about Lancy and click <em>Open Anyway</em>.</li>
             </ol>
           </div>
         </article>
@@ -144,7 +144,7 @@
 <section class="section" id="verify" aria-labelledby="verify-h">
   <div class="container prose">
     <h2 id="verify-h">Verify your download</h2>
-    <p>FCMS Pro is not code signed, so the SHA-256 checksum is how you confirm the file is the one that was published. The values above come from the GitHub Release, which also carries them as <code>SHA256SUMS.txt</code>. The two must match.</p>
+    <p>Lancy is not code signed, so the SHA-256 checksum is how you confirm the file is the one that was published. The values above come from the GitHub Release, which also carries them as <code>SHA256SUMS.txt</code>. The two must match.</p>
     <div class="codeblock"><pre><code># Windows (PowerShell)
 Get-FileHash -Algorithm SHA256 .\<span data-asset-name="windows">{{asset.windows.name}}</span>
 
@@ -154,7 +154,7 @@ shasum -a 256 <span data-asset-name="macos">{{asset.macos.name}}</span>
 # Linux
 sha256sum <span data-asset-name="linux_deb">{{asset.linux_deb.name}}</span></code></pre><button class="copy-btn" type="button" data-copy-code>Copy</button></div>
     <div class="callout callout--info">
-      <strong>Back up before you update.</strong> Your database lives in your user data folder, not next to the program, so updating does not replace it. On Windows, uninstalling does delete that folder. FCMS Pro stores everything locally with no cloud copy, so export a backup from the Backup page first.
+      <strong>Back up before you update.</strong> Your database lives in your user data folder, not next to the program, so updating does not replace it. On Windows, uninstalling does delete that folder. Lancy stores everything locally with no cloud copy, so export a backup from the Backup page first.
     </div>
   </div>
 </section>
@@ -172,10 +172,10 @@ sha256sum <span data-asset-name="linux_deb">{{asset.linux_deb.name}}</span></cod
     </div>
     <div class="link-row link-row--spaced">
       <a class="btn" href="{{root}}changelog/">Full changelog</a>
-      <a class="btn btn--ghost" href="https://github.com/villenaderic/FcmsPro/releases" rel="noopener noreferrer">All releases on GitHub</a>
-      <a class="btn btn--ghost" href="https://github.com/villenaderic/FcmsPro/releases.atom" rel="noopener noreferrer"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-rss"/></svg>Subscribe to releases</a>
+      <a class="btn btn--ghost" href="https://github.com/codewithrodericvillena/lancey/releases" rel="noopener noreferrer">All releases on GitHub</a>
+      <a class="btn btn--ghost" href="https://github.com/codewithrodericvillena/lancey/releases.atom" rel="noopener noreferrer"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-rss"/></svg>Subscribe to releases</a>
     </div>
-    <p class="muted">Installed FCMS Pro already? It checks for updates when it starts and offers to install them.</p>
+    <p class="muted">Installed Lancy already? It checks for updates when it starts and offers to install them.</p>
   </div>
 </section>
 
