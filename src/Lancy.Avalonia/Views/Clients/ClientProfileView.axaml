@@ -18,7 +18,7 @@
                Margin="0,0,0,8" TextWrapping="Wrap" />
 
     <!-- Live-computed stats (Phase 1 audit §3: never stored on the Client record) -->
-    <StackPanel Grid.Row="2" Orientation="Horizontal" Spacing="24" Margin="0,0,0,16">
+    <WrapPanel Grid.Row="2" Orientation="Horizontal" ItemSpacing="28" LineSpacing="12" Margin="0,0,0,16">
       <StackPanel>
         <TextBlock Text="Commissions" Opacity="0.6" FontSize="12" />
         <TextBlock Text="{Binding CommissionCount}" FontSize="20" FontWeight="Bold" />
@@ -31,7 +31,7 @@
         <TextBlock Text="Outstanding Balance" Opacity="0.6" FontSize="12" />
         <TextBlock Text="{Binding OutstandingBalance, StringFormat='{}{0:C2}'}" FontSize="20" FontWeight="Bold" />
       </StackPanel>
-    </StackPanel>
+    </WrapPanel>
 
     <ScrollViewer Grid.Row="3">
       <StackPanel Spacing="24">

@@ -6,7 +6,7 @@
              x:Class="Lancy.Avalonia.Views.Analytics.AnalyticsView"
              x:DataType="vm:AnalyticsViewModel">
 
-  <ScrollViewer>
+  <ScrollViewer Padding="24">
     <StackPanel Margin="24" Spacing="24">
       <TextBlock Text="Analytics" FontSize="28" FontWeight="Bold" />
 

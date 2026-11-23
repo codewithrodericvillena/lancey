@@ -21,28 +21,68 @@ S = 2048  # draw big, downscale for clean edges
 C1, C2, DOT = (99, 102, 241), (139, 92, 246), (34, 211, 238)  # indigo -> violet, cyan dot
 
 
+def _l_shape(size):
+    """White "L" whose foot is a blade tapering to a lance point. Returned as an L-mode mask."""
+    m = Image.new("L", (size, size), 0)
+    d = ImageDraw.Draw(m)
+    u = size / 100
+    w = 15 * u
+    x0, top, bottom = 28 * u, 19 * u, 79 * u
+    d.rounded_rectangle((x0, top, x0 + w, bottom), radius=w / 2, fill=255)                       # stem
+    d.polygon([(x0 + w / 2, bottom - w * 1.18), (89 * u, bottom - w * 0.42), (x0 + w / 2, bottom)], fill=255)  # blade
+    return m
+
+
 def mark(size=S, with_tile=True):
+    from PIL import ImageFilter
     img = Image.new("RGBA", (size, size), (0, 0, 0, 0))
     if with_tile:
+        # indigo -> violet diagonal, with a cooler glow bottom-right
         grad = Image.new("RGBA", (size, size))
         px = grad.load()
+        stops = [(0.0, (79, 70, 229)), (0.55, (124, 92, 246)), (1.0, (168, 85, 247))]
         for y in range(size):
             for x in range(size):
                 t = (x + y) / (2 * size)
-                px[x, y] = tuple(int(C1[i] + (C2[i] - C1[i]) * t) for i in range(3)) + (255,)
+                for (t0, c0), (t1, c1) in zip(stops, stops[1:]):
+                    if t <= t1:
+                        k = (t - t0) / (t1 - t0)
+                        px[x, y] = tuple(int(c0[i] + (c1[i] - c0[i]) * k) for i in range(3)) + (255,)
+                        break
         mask = Image.new("L", (size, size), 0)
-        ImageDraw.Draw(mask).rounded_rectangle((0, 0, size - 1, size - 1), radius=int(size * 0.22), fill=255)
+        ImageDraw.Draw(mask).rounded_rectangle((0, 0, size - 1, size - 1), radius=int(size * 0.225), fill=255)
+        # soft top-left sheen
+        sheen = Image.new("L", (size, size), 0)
+        ImageDraw.Draw(sheen).ellipse((-size * 0.3, -size * 0.45, size * 0.85, size * 0.55), fill=34)
+        sheen = sheen.filter(ImageFilter.GaussianBlur(size * 0.08))
+        white = Image.new("RGBA", (size, size), (255, 255, 255, 255))
+        grad = Image.composite(white, grad, sheen)
         img.paste(grad, (0, 0), mask)
-    d = ImageDraw.Draw(img)
+    lmask = _l_shape(size)
+    # drop shadow under the L
+    shadow = Image.new("RGBA", (size, size), (30, 20, 90, 0))
+    shadow.putalpha(lmask.point(lambda v: int(v * 0.45)))
+    shadow = shadow.filter(ImageFilter.GaussianBlur(size * 0.018))
+    shifted = Image.new("RGBA", (size, size), (0, 0, 0, 0))
+    shifted.paste(shadow, (0, int(size * 0.018)))
+    img = Image.alpha_composite(img, shifted)
+    # the L itself: white with a faint vertical fade for depth
+    letter = Image.new("RGBA", (size, size), (255, 255, 255, 255))
+    fade = Image.linear_gradient("L").resize((size, size)).point(lambda v: 255)
+    letter.putalpha(Image.composite(lmask, Image.new("L", (size, size), 0), fade))
+    img = Image.alpha_composite(img, letter)
+    # blade tint: white -> cyan toward the point, only beyond the stem
     u = size / 100
-    w = 15 * u
-    # the "L": stem + foot with rounded ends
-    d.rounded_rectangle((30 * u, 22 * u, 30 * u + w, 76 * u), radius=w / 2, fill="white")
-    d.rounded_rectangle((30 * u, 76 * u - w, 72 * u, 76 * u), radius=w / 2, fill="white")
-    # accent dot: the "period" at the end of the foot
-    r = 6.5 * u
-    cx, cy = 72 * u + 3 * u, 76 * u - w / 2
-    d.ellipse((cx - r, cy - r, cx + r, cy + r), fill=DOT)
+    tint = Image.new("RGBA", (size, size), (0, 0, 0, 0))
+    tp = tint.load()
+    x_start, x_end = 43 * u, 89 * u
+    for x in range(int(x_start), min(size, int(x_end) + 1)):
+        k = (x - x_start) / (x_end - x_start)
+        col = tuple(int(255 + (DOT[i] - 255) * k) for i in range(3)) + (255,)
+        for y in range(int(55 * u), int(80 * u)):
+            tp[x, y] = col
+    tint.putalpha(Image.composite(lmask, Image.new("L", (size, size), 0), tint.getchannel("A")))
+    img = Image.alpha_composite(img, tint)
     return img
 
 
@@ -77,12 +117,20 @@ def main():
 
     # a real SVG (the old one embedded a raster) shared by docs and the website
     svg = f'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="512" height="512">
-  <defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
-    <stop offset="0" stop-color="rgb{C1}"/><stop offset="1" stop-color="rgb{C2}"/></linearGradient></defs>
-  <rect width="100" height="100" rx="22" fill="url(#g)"/>
-  <rect x="30" y="22" width="15" height="54" rx="7.5" fill="#fff"/>
-  <rect x="30" y="61" width="42" height="15" rx="7.5" fill="#fff"/>
-  <circle cx="75" cy="68.5" r="6.5" fill="rgb{DOT}"/>
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="rgb(79,70,229)"/><stop offset=".55" stop-color="rgb(124,92,246)"/><stop offset="1" stop-color="rgb(168,85,247)"/>
+    </linearGradient>
+    <filter id="s" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="1.8" stdDeviation="1.6" flood-color="rgb(30,20,90)" flood-opacity=".45"/></filter>
+  </defs>
+  <rect width="100" height="100" rx="22.5" fill="url(#g)"/>
+  <linearGradient id="b" x1="43" y1="0" x2="89" y2="0" gradientUnits="userSpaceOnUse">
+    <stop offset="0" stop-color="#fff"/><stop offset="1" stop-color="rgb{DOT}"/>
+  </linearGradient>
+  <g filter="url(#s)">
+    <rect x="28" y="19" width="15" height="60" rx="7.5" fill="#fff"/>
+    <polygon points="35.5,61.3 89,72.6 35.5,79" fill="url(#b)"/>
+  </g>
 </svg>
 '''
     for p in (ROOT / "docs" / "logo.svg", ROOT / "site" / "assets" / "img" / "logo.svg"):

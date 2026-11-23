@@ -3,6 +3,19 @@
 All notable changes to Lancy (formerly FCMS Pro) are documented here. Format loosely follows
 [Keep a Changelog](https://keepachangelog.com/).
 
+## [2.1.0]
+
+### Added
+- New Lancy logo: an "L" whose foot is a lance blade, with refreshed app icons, installer icons and website branding.
+
+### Changed
+- Better small-window layout: pages no longer waste 48px on each side, so there is more room on narrow or split-screen windows.
+- Client and commission detail pages now wrap their totals and action buttons instead of running off the edge.
+
+### Fixed
+- **Automatic updates now work.** The update feed is now signed (the app rejected unsigned feeds, so no update was ever offered), and the downloaded installer keeps its `.exe` name so the silent install actually runs. Versions 2.0.0 and 2.0.1 cannot update themselves: install 2.1.0 manually once from the download page, and later updates are automatic.
+- The updater now writes its progress to the app log, which makes "no update appeared" reports diagnosable.
+
 ## [2.0.1]
 
 ### Changed

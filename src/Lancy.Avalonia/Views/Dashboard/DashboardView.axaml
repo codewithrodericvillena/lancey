@@ -96,7 +96,7 @@
     </Style>
   </UserControl.Styles>
 
-  <Grid RowDefinitions="Auto,*">
+  <Grid RowDefinitions="Auto,*" Margin="24">
     <TextBlock Grid.Row="0" Text="Dashboard" FontSize="28" FontWeight="Bold" Margin="24,24,24,0" />
 
     <!--

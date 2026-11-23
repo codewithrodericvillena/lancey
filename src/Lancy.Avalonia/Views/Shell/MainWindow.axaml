@@ -207,7 +207,8 @@
          narrow/split-screen window; better for those to reflow/wrap than to
          silently get an unbounded layout pass. -->
     <ScrollViewer Grid.Column="2" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
-    <Border Padding="24">
+    <!-- No padding here: each page owns its 24px gutter (stacking both wasted 48px per side on narrow windows). -->
+    <Border>
       <ContentControl Content="{Binding CurrentPageViewModel}">
         <ContentControl.DataTemplates>
 

@@ -9,13 +9,13 @@
 
     <StackPanel Grid.Row="0" Spacing="4" Margin="0,0,0,4">
       <TextBlock Text="{Binding Commission.Title}" FontSize="28" FontWeight="Bold" />
-      <StackPanel Orientation="Horizontal" Spacing="8">
+      <WrapPanel Orientation="Horizontal" ItemSpacing="8" LineSpacing="6">
         <TextBlock Text="{Binding Commission.Status}" Opacity="0.7" />
         <TextBlock Text="&#183;" Opacity="0.4" />
         <TextBlock Text="{Binding Client.Name}" Opacity="0.7" />
         <Button Content="View Client" Command="{Binding ViewClientCommand}" Padding="8,3" FontSize="11" />
         <Button Content="Invoice PDF" Classes="accent" Command="{Binding ExportInvoiceCommand}" Padding="10,3" FontSize="11" />
-      </StackPanel>
+      </WrapPanel>
     </StackPanel>
 
     <TextBlock Grid.Row="1" Text="{Binding ErrorMessage}" Foreground="{DynamicResource AppDestructiveBrush}"
@@ -25,7 +25,7 @@
     <TextBlock Grid.Row="1" Text="{Binding StatusMessage}" Opacity="0.7" VerticalAlignment="Bottom" HorizontalAlignment="Right"
                IsVisible="{Binding StatusMessage, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
 
-    <StackPanel Grid.Row="2" Orientation="Horizontal" Spacing="24" Margin="0,12,0,16">
+    <WrapPanel Grid.Row="2" Orientation="Horizontal" ItemSpacing="28" LineSpacing="12" Margin="0,12,0,16">
       <StackPanel>
         <TextBlock Text="Price" Opacity="0.6" FontSize="12" />
         <TextBlock Text="{Binding Commission.Price, StringFormat='{}{0:C2}'}" FontSize="20" FontWeight="Bold" />
@@ -42,7 +42,7 @@
         <TextBlock Text="Deadline" Opacity="0.6" FontSize="12" />
         <TextBlock Text="{Binding Commission.Deadline}" FontSize="20" FontWeight="Bold" />
       </StackPanel>
-    </StackPanel>
+    </WrapPanel>
 
     <ScrollViewer Grid.Row="3">
       <StackPanel Spacing="24">

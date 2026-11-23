@@ -28,8 +28,18 @@ namespace Lancy.Avalonia.Services;
 
 public static class ScreenshotGenerator
 {
-    private const int TargetWidth = 1200;
-    private const int TargetHeight = 660;
+    // LANCY_SCREENSHOT_SIZE=WxH renders at another size (e.g. 760x520 to check small-window layouts);
+    // LANCY_SCREENSHOT_DIR keeps those out of the website's screenshot folder.
+    private static readonly (int W, int H) Size = ParseSize(Environment.GetEnvironmentVariable("LANCY_SCREENSHOT_SIZE"));
+    private static int TargetWidth => Size.W;
+    private static int TargetHeight => Size.H;
+
+    private static (int, int) ParseSize(string? v)
+    {
+        var parts = v?.Split('x');
+        return parts is { Length: 2 } && int.TryParse(parts[0], out var w) && int.TryParse(parts[1], out var h)
+            ? (w, h) : (1200, 660);
+    }
 
     public static async Task RunAsync(IClassicDesktopStyleApplicationLifetime desktop, IServiceProvider services)
     {
@@ -60,7 +70,8 @@ public static class ScreenshotGenerator
 
         // Target directory: site/assets/img/screenshots
         var baseDir = AppContext.BaseDirectory;
-        var outDir = Path.GetFullPath(Path.Combine(baseDir, "../../../../../site/assets/img/screenshots"));
+        var outDir = Environment.GetEnvironmentVariable("LANCY_SCREENSHOT_DIR")
+                     ?? Path.GetFullPath(Path.Combine(baseDir, "../../../../../site/assets/img/screenshots"));
         Directory.CreateDirectory(outDir);
         Log.Information("ScreenshotGenerator: saving screenshots to {OutDir}", outDir);
 

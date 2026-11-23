@@ -4,7 +4,7 @@
              x:Class="Lancy.Avalonia.Views.Settings.SettingsView"
              x:DataType="vm:SettingsViewModel">
 
-  <ScrollViewer>
+  <ScrollViewer Padding="24">
     <StackPanel Margin="24" Spacing="24" MaxWidth="520">
       <TextBlock Text="Settings" FontSize="28" FontWeight="Bold" />
 

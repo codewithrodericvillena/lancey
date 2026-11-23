@@ -11,7 +11,7 @@
     <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
     
     <!-- Application Metadata for SmartScreen & File Properties -->
-    <Version>2.0.0</Version>
+    <Version>2.1.0</Version>
     <IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
     <Authors>Roderic Villena</Authors>
     <Company>Roderic Villena</Company>
