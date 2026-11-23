@@ -39,7 +39,18 @@ public class UpdateService
             _sparkle = new SparkleUpdater(AppcastUrl, new Ed25519Checker(SecurityMode.Strict, PublicKey))
             {
                 // A real icon instead of null, so the update window can be built safely.
-                UIFactory = new UIFactory(LoadWindowIcon()!),
+                UIFactory = new UIFactory(LoadWindowIcon()!)
+                {
+                    // Windows won't let a background app take focus, so without this the prompt opened
+                    // behind whatever the user was doing and went unnoticed. Topmost shows it above
+                    // other windows (the user can still close it or choose "Remind me later").
+                    ProcessWindowAfterInit = (window, _) =>
+                    {
+                        window.Topmost = true;
+                        window.ShowInTaskbar = true;
+                        window.Opened += (_, _) => window.Activate();
+                    },
+                },
                 LogWriter = new SerilogSparkleLogger(),
                 // GitHub's release redirect sends no usable file name, so NetSparkle saved the installer as
                 // an extensionless GUID that Windows can't run. Name it from the URL (Lancy-Setup-x.y.z.exe).
