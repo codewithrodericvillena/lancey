@@ -52,6 +52,7 @@ _site/
 .video-tools/
 build-video/
 tools/
+scratch/
 *.mp4
 *.wav
 *.mp3
